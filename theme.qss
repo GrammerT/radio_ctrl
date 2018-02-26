@@ -1,0 +1,72 @@
+QWidget{
+    font-family: microsoft yahei;
+    color: rgb(79,79,79);
+    font-size: 12px;
+}
+
+QPushButton{
+    background:rgb(126,206,244);
+}
+
+
+QDoubleSpinBox, QSpinBox{
+        border-radius: 2px;
+        border: 1px solid rgb(100, 100, 100);
+        padding: 2px;
+}
+
+QDoubleSpinBox:enabled,
+QSpinBox:enabled {
+        color: rgb(0,0,0);
+}
+
+QDoubleSpinBox:enabled:hover,
+QDoubleSpinBox:enabled:focus,
+QSpinBox:enabled:hover,
+QSpinBox:enabled:focus {
+        color: rgb(0, 0, 0);
+}
+
+QDoubleSpinBox:!enabled,
+QSpinBox:!enabled {
+        background: rgb(128,128,128);
+}
+
+QDoubleSpinBox::up-button,
+QSpinBox::up-button {
+        border-top-right-radius: 4px;
+        image: url(:/image/upButton);
+}
+
+QDoubleSpinBox::up-button:!enabled,
+QSpinBox::up-button:!enabled {
+        background: transparent;
+}
+
+QDoubleSpinBox::up-button:enabled:hover,
+QSpinBox::up-button:enabled:hover {
+        background: rgb(81,81,81, 30);
+}
+
+QDoubleSpinBox::down-button,
+QSpinBox::down-button {
+        border-bottom-right-radius: 4px;
+        image: url(:/image/downButton);
+}
+
+QDoubleSpinBox::down-button:!enabled,
+QSpinBox::down-button:!enabled {
+        background: transparent;
+}
+
+QDoubleSpinBox::down-button:enabled:hover,
+QSpinBox::down-button:enabled:hover {
+        background: rgb(81,81,81, 30);
+}
+
+
+QLineEdit{
+    border-radius:2px;
+    border: 1px solid rgb(199,199,199);
+}
+

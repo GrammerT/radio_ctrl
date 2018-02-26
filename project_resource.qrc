@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>theme.qss</file>
+        <file>image/downButton.png</file>
+        <file>image/upButton.png</file>
+        <file>image/arrowBottom.png</file>
+        <file>image/background.png</file>
+        <file>image/help.png</file>
+    </qresource>
+</RCC>
