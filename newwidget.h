@@ -17,9 +17,14 @@ public:
 protected:
     virtual void paintEvent(QPaintEvent *event)override;
 
+private slots:
+    void on_m_pDSpinBoxInputFreq_valueChanged(double arg1);
+
+    void on_m_pCBLinkage_toggled(bool checked);
+
 private:
     void initWidget();
-
+    void initControl(bool);
 private:
     Ui::NewWidget *ui;
 };

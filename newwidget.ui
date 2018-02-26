@@ -152,7 +152,7 @@
     <rect>
      <x>387</x>
      <y>277</y>
-     <width>212</width>
+     <width>218</width>
      <height>25</height>
     </rect>
    </property>
@@ -170,16 +170,16 @@
     <item>
      <widget class="QDoubleSpinBox" name="m_pDSpinBoxDDS1Freq">
       <property name="suffix">
-       <string>Hz</string>
+       <string> Hz</string>
       </property>
       <property name="decimals">
        <number>6</number>
       </property>
       <property name="minimum">
-       <double>9910000000.000000000000000</double>
+       <double>0.000000000000000</double>
       </property>
       <property name="maximum">
-       <double>10110000000.000000000000000</double>
+       <double>9999999999999999635896294965248.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -265,6 +265,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="suffix">
+       <string> π</string>
+      </property>
       <property name="minimum">
        <number>-30</number>
       </property>
@@ -289,16 +292,16 @@
        </sizepolicy>
       </property>
       <property name="suffix">
-       <string>Hz</string>
+       <string> Hz</string>
       </property>
       <property name="decimals">
        <number>6</number>
       </property>
       <property name="minimum">
-       <double>9910000000.000000000000000</double>
+       <double>0.000000000000000</double>
       </property>
       <property name="maximum">
-       <double>10110000000.000000000000000</double>
+       <double>9999999999999999635896294965248.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -380,7 +383,7 @@
        </sizepolicy>
       </property>
       <property name="suffix">
-       <string>Hz</string>
+       <string> Hz</string>
       </property>
       <property name="decimals">
        <number>6</number>
@@ -415,11 +418,14 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="suffix">
+       <string> dBm</string>
+      </property>
       <property name="minimum">
-       <number>-30</number>
+       <number>-15</number>
       </property>
       <property name="maximum">
-       <number>-30</number>
+       <number>30</number>
       </property>
      </widget>
     </item>
@@ -430,7 +436,7 @@
     <rect>
      <x>43</x>
      <y>190</y>
-     <width>211</width>
+     <width>218</width>
      <height>25</height>
     </rect>
    </property>
@@ -463,7 +469,7 @@
        <bool>true</bool>
       </property>
       <property name="suffix">
-       <string>Hz</string>
+       <string> Hz</string>
       </property>
       <property name="decimals">
        <number>6</number>
@@ -563,7 +569,7 @@
     <rect>
      <x>13</x>
      <y>356</y>
-     <width>156</width>
+     <width>162</width>
      <height>43</height>
     </rect>
    </property>
@@ -587,7 +593,7 @@
        <bool>true</bool>
       </property>
       <property name="suffix">
-       <string>Hz</string>
+       <string> Hz</string>
       </property>
       <property name="decimals">
        <number>6</number>
@@ -607,7 +613,7 @@
     <rect>
      <x>13</x>
      <y>409</y>
-     <width>56</width>
+     <width>141</width>
      <height>43</height>
     </rect>
    </property>
@@ -620,12 +626,30 @@
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="m_pSpinBoxOutputPower">
+     <widget class="QDoubleSpinBox" name="m_pDSpinBoxOutputFreq_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="suffix">
+       <string> Hz</string>
+      </property>
+      <property name="decimals">
+       <number>1</number>
+      </property>
       <property name="minimum">
-       <number>-30</number>
+       <double>-20.000000000000000</double>
       </property>
       <property name="maximum">
-       <number>-30</number>
+       <double>80.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
       </property>
      </widget>
     </item>
