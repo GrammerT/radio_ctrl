@@ -6,5 +6,7 @@
         <file>image/arrowBottom.png</file>
         <file>image/background.png</file>
         <file>image/help.png</file>
+        <file>image/checkboxselected.png</file>
+        <file>image/checkboxunselected.png</file>
     </qresource>
 </RCC>

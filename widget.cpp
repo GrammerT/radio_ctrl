@@ -41,7 +41,7 @@ Widget::Widget(QWidget *parent)
     m_pInputLabel = new QLabel;
     m_pInputLabel->setObjectName("label");
     m_pInputLabel->setFixedSize(60, 25);
-    m_pInputLabel->setText(QString::fromLocal8Bit("输入频率:"));
+    m_pInputLabel->setText(QString::fromLocal8Bit(":"));
 
     m_pInputSpinBox = new QDoubleSpinBox;
     m_pInputSpinBox->setFixedSize(150, 25);
@@ -54,7 +54,7 @@ Widget::Widget(QWidget *parent)
 
     m_pHMCheckBox = new QCheckBox;
 
-    m_pHMCheckBox->setText(QString::fromLocal8Bit("手动"));
+    m_pHMCheckBox->setText(QString::fromLocal8Bit(""));
     m_pHMCheckBox->setObjectName("checkbox");
 
     pInputLayout->addWidget(m_pInputLabel);
@@ -99,7 +99,7 @@ Widget::Widget(QWidget *parent)
     m_pPowerLabel = new QLabel;
     m_pPowerLabel->setObjectName("label");
     m_pPowerLabel->setFixedSize(60, 25);
-    m_pPowerLabel->setText(QString::fromLocal8Bit("输入功率:"));
+    m_pPowerLabel->setText(QString::fromLocal8Bit(":"));
 
     m_pPowerSpinBox = new QDoubleSpinBox;
     m_pPowerSpinBox->setObjectName("spinbox");
@@ -118,7 +118,7 @@ Widget::Widget(QWidget *parent)
     m_pOutputLabel = new QLabel;
     m_pOutputLabel->setObjectName("label");
     m_pOutputLabel->setFixedSize(60, 25);
-    m_pOutputLabel->setText(QString::fromLocal8Bit("输出功率:"));
+    m_pOutputLabel->setText(QString::fromLocal8Bit(":"));
 
     m_pOutputSpinBox = new QDoubleSpinBox;
     m_pOutputSpinBox->setObjectName("spinbox");
@@ -150,7 +150,7 @@ Widget::Widget(QWidget *parent)
 
     QGroupBox *pParasBox = new QGroupBox;
 
-    pParasBox->setTitle(QString::fromLocal8Bit("参数配置"));
+    pParasBox->setTitle(QString::fromLocal8Bit(""));
     pParasBox->setLayout(parasLayout);
 
     m_pIPLabel = new QLabel;
@@ -175,13 +175,13 @@ Widget::Widget(QWidget *parent)
 
     QPushButton *pConnectBtn = new QPushButton;
     pConnectBtn->setObjectName("button");
-    pConnectBtn->setText(QString::fromLocal8Bit("连接"));
+    pConnectBtn->setText(QString::fromLocal8Bit(""));
     pConnectBtn->setFixedSize(75, 25);
 
     QLabel *pShowLabel = new QLabel;
     pShowLabel->setObjectName("label");
     pShowLabel->setFixedSize(60, 25);
-    pShowLabel->setText(QString::fromLocal8Bit("连接状态:"));
+    pShowLabel->setText(QString::fromLocal8Bit(":"));
 
     m_pStatusLabel = new QLabel;
     m_pStatusLabel->setObjectName("connectLabel");
@@ -211,19 +211,19 @@ Widget::Widget(QWidget *parent)
 
     QGroupBox *pNetWorkBox = new QGroupBox;
 
-    pNetWorkBox->setTitle(QString::fromLocal8Bit("网络配置"));
+    pNetWorkBox->setTitle(QString::fromLocal8Bit(""));
     pNetWorkBox->setLayout(pNetworkLayout);
 
     QHBoxLayout *pBottomLayout = new QHBoxLayout;
 
     QPushButton *pSearchBtn = new QPushButton;
     pSearchBtn->setObjectName("button");
-    pSearchBtn->setText(QString::fromLocal8Bit("搜索"));
+    pSearchBtn->setText(QString::fromLocal8Bit(""));
     pSearchBtn->setFixedSize(75, 25);
 
     QPushButton *pSendBtn = new QPushButton;
     pSendBtn->setObjectName("button");
-    pSendBtn->setText(QString::fromLocal8Bit("发送"));
+    pSendBtn->setText(QString::fromLocal8Bit(""));
     pSendBtn->setFixedSize(75, 25);
 
     pBottomLayout->addStretch(1);
@@ -326,12 +326,12 @@ void Widget::changeNetworkStatus(bool status)
     if (!status)
     {
         m_pStatusLabel->setStyleSheet("QLabel{color:rgb(175, 0, 0)}");
-        m_pStatusLabel->setText(QString::fromLocal8Bit("未连接"));
+        m_pStatusLabel->setText(QString::fromLocal8Bit("δ"));
     }
     else
     {
         m_pStatusLabel->setStyleSheet("QLabel{color:rgb(0, 165, 235)}");
-        m_pStatusLabel->setText(QString::fromLocal8Bit("已连接"));
+        m_pStatusLabel->setText(QString::fromLocal8Bit(""));
     }
 }
 
@@ -488,15 +488,12 @@ void Widget::initWorkers()
 void Widget::loadConversion(const QString &fileName, QVector<Conversion> &conversionVec)
 {
     conversionVec.clear();
-
     QFile file(fileName);
-
     if(!file.open(QIODevice::ReadOnly))
     {
         qDebug() << fileName << " open error!" << file.exists();
         return;
     }
-
     QByteArray bytes;
 
     QRegExp splitExp("\\s+");
@@ -505,12 +502,10 @@ void Widget::loadConversion(const QString &fileName, QVector<Conversion> &conver
     {
         QString line = QString::fromLatin1(bytes);
         QStringList wordList = line.split(splitExp);
-
         if (wordList.size() < 3)
         {
             continue;
         }
-
         Conversion conversion;
         QString value = wordList[0];
         QString RF = wordList[1];
@@ -521,13 +516,11 @@ void Widget::loadConversion(const QString &fileName, QVector<Conversion> &conver
 
         conversionVec.push_back(conversion);
     }
-
     file.close();
 }
 
 void Widget::loadUPConversion(const QString &fileName, QVector<Widget::UPConversion> &conversionVec)
 {
-
     conversionVec.clear();
 
     QFile file(fileName);
