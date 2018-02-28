@@ -442,7 +442,7 @@ void Widget::sendControlCommand()
     QJsonDocument document;
 
     document.setObject(sendObject);
-
+    qDebug()<<document;
     QByteArray bytes = document.toJson();
 
     emit sendMessage(bytes);

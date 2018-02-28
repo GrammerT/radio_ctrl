@@ -42,7 +42,7 @@ signals:
 
 protected:
     virtual void paintEvent(QPaintEvent *event)override;
-
+    virtual void closeEvent(QCloseEvent *event)override;
 private slots:
     void on_m_pDSpinBoxInputFreq_valueChanged(double arg1);
 
@@ -69,6 +69,9 @@ private:
     void loadUPConversion(const QString &fileName, QVector<UPConversion> &conversionVec);
     int findAttenuation(double powerValue, const QVector<Conversion> &conversionVec);
     int findUPAttenuation(double powerValue, const QVector<UPConversion> &conversionVec);
+
+    void saveParamsToJson();
+    void restoreParamsFromJson();
 
 private:
     Ui::NewWidget *ui;

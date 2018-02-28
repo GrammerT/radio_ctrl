@@ -10,8 +10,9 @@ int main(int argc, char *argv[])
     a.setApplicationName("Tool");
     qDebug() << QApplication::applicationDirPath();
     qDebug() << QDir::currentPath();
-    NewWidget w;
+    NewWidget w1;
+    w1.show();
 //    Widget w;
-    w.show();
+//    w.show();
     return a.exec();
 }
