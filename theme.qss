@@ -94,3 +94,11 @@ QLabel#m_pStateBar{
 QLineEdit#m_pLineEdit300_400:!enabled{
     background:rgb(169,169,169);
 }
+
+QPushButton#m_pBtnHelp:hover{
+    background:rgb(126,210,63);
+}
+
+QPushButton#m_pBtnHelp:pressed{
+    background:rgb(126,206,244);
+}

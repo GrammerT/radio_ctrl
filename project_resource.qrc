@@ -8,5 +8,6 @@
         <file>image/help.png</file>
         <file>image/checkboxselected.png</file>
         <file>image/checkboxunselected.png</file>
+        <file>image/icon.ico</file>
     </qresource>
 </RCC>

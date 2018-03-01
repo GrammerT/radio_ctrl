@@ -7,6 +7,8 @@
 #include <QJsonDocument>
 #include <QByteArray>
 #include <QTimer>
+#include <QHostAddress>
+#include <QMessageBox>
 #include "NetworkTaskWorker.h"
 
 static const QString CONFIG_FILE = "config.json";
@@ -375,7 +377,15 @@ void NewWidget::on_m_pBtnHelp_clicked()
 void NewWidget::on_m_pBtnConnWifi_clicked()
 {
     QString ipAddr = ui->m_pLineEditIP->text();
-    emit connectToServer(ipAddr);
+    QHostAddress addr;
+    if(addr.setAddress(ipAddr))
+    {
+        emit connectToServer(ipAddr);
+    }
+    else
+    {
+        QMessageBox::warning(this,tr("\351\224\231\350\257\257"),tr("\350\257\267\346\243\200\346\237\245IP\345\234\260\345\235\200\346\240\274\345\274\217!"));
+    }
 }
 
 void NewWidget::on_m_pBtnPhaseLock_clicked()

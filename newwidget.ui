@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Tool</string>
+   <string>频率综合器控制系统</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -689,7 +689,7 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>511</x>

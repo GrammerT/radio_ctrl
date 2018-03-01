@@ -4,12 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = untitled7
 TEMPLATE = app
+RC_FILE = icon.rc
 
 INCLUDEPATH += "$$PWD/zmq_include"
 
