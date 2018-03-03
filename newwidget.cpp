@@ -91,6 +91,9 @@ void NewWidget::outputFreqValue()
     double value = ui->m_pDSpinBoxDDS2Freq->value()+
             300000000.0+
             ui->m_pDSpinBoxDROFreq->value();
+    qDebug()<<ui->m_pDSpinBoxDDS2Freq->value()<<"---"<<
+              ui->m_pDSpinBoxDROFreq->value()<<
+              "---"<<value;
     ui->m_pDSpinBoxOutputFreq->setValue(value);
 }
 
@@ -99,8 +102,6 @@ void NewWidget::DDS1Value()
     double DDS1Value = ui->m_pDSpinBoxInputFreq->value() -
                                         9600000000.0 -
             (ui->m_pLineEdit300_400->text().toInt()*1000000.0);
-    qDebug()<<DDS1Value<<"---------"<<ui->m_pDSpinBoxInputFreq->value()
-           <<"-------------"<<(ui->m_pLineEdit300_400->text().toInt()*1000000.0);
     ui->m_pDSpinBoxDDS1Freq->setValue(DDS1Value);
 }
 
@@ -343,7 +344,9 @@ void NewWidget::on_m_pDSpinBoxInputFreq_valueChanged(double arg1)
     else
     {
         DDS1Value();
+        DROValue(false);
     }
+    outputFreqValue();
 }
 
 void NewWidget::on_m_pCBLinkage_toggled(bool checked)
@@ -442,4 +445,9 @@ void NewWidget::on_m_pBtnSendMsg_clicked()
 
     QByteArray bytes = document.toJson();
     emit sendMessage(bytes);
+}
+
+void NewWidget::on_m_pDSpinBoxDDS2Freq_valueChanged(double arg1)
+{
+    outputFreqValue();
 }

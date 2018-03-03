@@ -92,19 +92,6 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>637</x>
-     <y>146</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>SYPD-2</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
@@ -598,10 +585,10 @@
        <number>6</number>
       </property>
       <property name="minimum">
-       <double>9910000000.000000000000000</double>
+       <double>0.000000000000000</double>
       </property>
       <property name="maximum">
-       <double>10110000000.000000000000000</double>
+       <double>9999999999999999931398190359470212947659194368.000000000000000</double>
       </property>
      </widget>
     </item>

@@ -56,6 +56,8 @@ private slots:
 
     void on_m_pBtnSendMsg_clicked();
 
+    void on_m_pDSpinBoxDDS2Freq_valueChanged(double arg1);
+
 private:
     void initWidget();
     void initControl(bool);
