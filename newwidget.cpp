@@ -506,3 +506,8 @@ void NewWidget::on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1)
     DROValue(!ui->m_pCBLinkage->isChecked());
     outputFreqValue();
 }
+
+void NewWidget::on_m_pBtnStartScan_clicked()
+{
+
+}

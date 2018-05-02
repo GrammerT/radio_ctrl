@@ -66,6 +66,8 @@ private slots:
 
     void on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1);
 
+    void on_m_pBtnStartScan_clicked();
+
 private:
     void initWidget();
     void initControl(bool);
