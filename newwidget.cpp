@@ -9,9 +9,11 @@
 #include <QTimer>
 #include <QHostAddress>
 #include <QMessageBox>
+#include <QDir>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QProcess>
 #include "NetworkTaskWorker.h"
-
-static const QString CONFIG_FILE = "config.json";
 
 NewWidget::NewWidget(QWidget *parent) :
     QWidget(parent),
@@ -24,13 +26,13 @@ NewWidget::NewWidget(QWidget *parent) :
     file.close();
     ui->setupUi(this);
     initWidget();
-    loadConversion("down_conversion.txt", mDownConversionVec);
-    loadConversion("search_down_conversion.txt", mSearchDownConversionVec);
-    loadUPConversion("up_conversion.txt", mUpConversionVec);
     initNetworkTask();
     restoreParamsFromJson();
     outputFreqValue();
     changeNetworkStatus(false);
+    initComboBox();
+    on_m_pComBoxDataList_currentTextChanged(ui->m_pComBoxDataList->currentText());
+    this->on_m_pCBLinkage_toggled(true);
 }
 
 NewWidget::~NewWidget()
@@ -45,6 +47,17 @@ void NewWidget::onConnected()
 
 void NewWidget::onSendFinished()
 {
+    requireVec.removeFirst();
+    if(requireVec.size()!=0)
+    {
+        return ;
+    }
+    if(ui->m_pBtnPhaseLock->text().contains("..."))
+    {
+        ui->m_pBtnPhaseLock->setText("\351\224\201\347\233\270\346\215\225\350\216\267");
+    }
+    ui->m_pBtnSendMsg->setEnabled(true);
+    ui->m_pBtnPhaseLock->setEnabled(true);
     ui->m_pStateBar->setText(("\345\217\221\351\200\201\346\210\220\345\212\237"));
     QTimer::singleShot(5000,this,[&](){
         ui->m_pStateBar->clear();
@@ -88,12 +101,8 @@ void NewWidget::initControl(bool)
 
 void NewWidget::outputFreqValue()
 {
-    double value = ui->m_pDSpinBoxDDS2Freq->value()+
-            300000000.0+
-            ui->m_pDSpinBoxDROFreq->value();
-    qDebug()<<ui->m_pDSpinBoxDDS2Freq->value()<<"---"<<
-              ui->m_pDSpinBoxDROFreq->value()<<
-              "---"<<value;
+    double value =ui->m_pDSpinBoxDROFreq->value()- ui->m_pDSpinBoxDDS2Freq->value()-
+            300000000.0;
     ui->m_pDSpinBoxOutputFreq->setValue(value);
 }
 
@@ -151,7 +160,7 @@ void NewWidget::loadConversion(const QString &fileName, QVector<Conversion> &con
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << fileName << " open error!" << file.exists();
+        QMessageBox::warning(this,tr("\351\224\231\350\257\257"),tr("\346\211\223\345\274\200%1\345\244\261\350\264\245").arg(fileName));
         return;
     }
     QByteArray bytes;
@@ -187,7 +196,7 @@ void NewWidget::loadUPConversion(const QString &fileName, QVector<UPConversion> 
 
     if(!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << fileName << " open error!" << file.exists();
+        QMessageBox::warning(this,tr("\351\224\231\350\257\257"),tr("\346\211\223\345\274\200%1\345\244\261\350\264\245").arg(fileName));
         return;
     }
 
@@ -274,9 +283,11 @@ void NewWidget::saveParamsToJson()
 {
     QJsonObject params;
     //! input_power is error . should be input freq
-    params.insert("input_power", ui->m_pDSpinBoxInputFreq->value());
+    params.insert("input_freq", ui->m_pDSpinBoxInputFreq->value());
+    params.insert("input_power",ui->m_pSpinBoxInputPower->value());
     params.insert("DDS_1", ui->m_pDSpinBoxDDS1Freq->value());
     params.insert("DDS_2", ui->m_pDSpinBoxDDS2Freq->value());
+    params.insert("output_freq",ui->m_pDSpinBoxOutputFreq->value());
     params.insert("output_power", ui->m_pDSpinBoxOutputPower->value());
     params.insert("IP", ui->m_pLineEditIP->text());
 
@@ -285,18 +296,20 @@ void NewWidget::saveParamsToJson()
     document.setObject(params);
     QByteArray bytes = document.toJson();
 
-    QFile file(CONFIG_FILE);
-
-    file.open(QIODevice::WriteOnly);
-
-    file.write(bytes);
-
-    file.close();
+    QFile file(QApplication::applicationDirPath()+ "//config.json");
+    qDebug()<<QApplication::applicationDirPath()+ "//config.json";
+    if(file.open(QIODevice::WriteOnly))
+    {
+        file.write(bytes);
+        file.close();
+        return ;
+    }
+    qDebug()<<bytes;
 }
 
 void NewWidget::restoreParamsFromJson()
 {
-    QFile file(CONFIG_FILE);
+    QFile file(QApplication::applicationDirPath()+ "//config.json");
     if(!file.open(QIODevice::ReadOnly))
         return;
     QByteArray bytes = file.readAll();
@@ -304,9 +317,13 @@ void NewWidget::restoreParamsFromJson()
     if(document.isObject())
     {
         QJsonObject paramas = document.object();
+        if(paramas.contains("input_freq"))
+        {
+            ui->m_pDSpinBoxInputFreq->setValue(paramas.take("input_freq").toDouble());
+        }
         if(paramas.contains("input_power"))
         {
-            ui->m_pDSpinBoxInputFreq->setValue(paramas.take("input_power").toDouble());
+            ui->m_pSpinBoxInputPower->setValue(paramas.take("input_power").toDouble());
         }
         if(paramas.contains("DDS_1"))
         {
@@ -315,6 +332,10 @@ void NewWidget::restoreParamsFromJson()
         if(paramas.contains("DDS_2"))
         {
             ui->m_pDSpinBoxDDS2Freq->setValue(paramas.take("DDS_2").toDouble());
+        }
+        if(paramas.contains("output_freq"))
+        {
+            ui->m_pDSpinBoxOutputFreq->setValue(paramas.take("output_freq").toDouble());
         }
         if(paramas.contains("output_power"))
         {
@@ -325,6 +346,27 @@ void NewWidget::restoreParamsFromJson()
             ui->m_pLineEditIP->setText(paramas.take("IP").toString());
         }
     }
+}
+
+void NewWidget::initComboBox()
+{
+    QString exepath = QApplication::applicationDirPath();
+    qDebug()<<exepath;
+    QDir dir(exepath+"\\data");
+    QStringList list = dir.entryList();
+    list.removeAt(0);
+    list.removeAt(0);
+    foreach(QString filename , list)
+    {
+        ui->m_pComBoxDataList->addItem(filename);
+    }
+}
+
+void NewWidget::loadData(QString datapath)
+{
+    loadConversion(datapath+"\\down_conversion.txt", mDownConversionVec);
+    loadConversion(datapath+"\\search_down_conversion.txt", mSearchDownConversionVec);
+    loadUPConversion(datapath+"\\up_conversion.txt", mUpConversionVec);
 }
 
 void NewWidget::on_m_pDSpinBoxInputFreq_valueChanged(double arg1)
@@ -368,13 +410,16 @@ void NewWidget::on_m_pCBLinkage_toggled(bool checked)
         ui->m_pDSpinBoxDDS2Freq->setEnabled(!checked);
         ui->m_pSpinBoxDDS2Phase->setEnabled(!checked);
     }
-
+    outputFreqValue();
 }
 
 void NewWidget::on_m_pBtnHelp_clicked()
 {
-
-
+    QString str = QApplication::applicationDirPath()+"\\help.pdf";
+    QStringList strList;
+    strList.append(str);
+    QProcess *pdfProcess = new QProcess(this);
+    pdfProcess->start(QApplication::applicationDirPath()+"\\mupdf.exe", strList);
 }
 
 void NewWidget::on_m_pBtnConnWifi_clicked()
@@ -393,15 +438,17 @@ void NewWidget::on_m_pBtnConnWifi_clicked()
 
 void NewWidget::on_m_pBtnPhaseLock_clicked()
 {
+    this->on_m_pBtnSendMsg_clicked();
+    requireVec.append(eLockPhase);
+    ui->m_pBtnPhaseLock->setText(tr("\346\215\225\350\216\267\344\270\255..."));
+    ui->m_pBtnPhaseLock->setEnabled(false);
+    ui->m_pBtnSendMsg->setEnabled(false);
     qint64 mDDS1ControlWord = (ui->m_pDSpinBoxDDS1Freq->value() / 400000000.0) * (((long long)1) << 48);
 
     int inputIndex = findAttenuation(ui->m_pDSpinBoxOutputPower->value(), mSearchDownConversionVec);
-
     //! pendding para en
     int en = 0;
-
     QJsonObject sendObject;
-
     sendObject.insert("type", "search");
     sendObject.insert("dds1_control", QString::number(mDDS1ControlWord));
     sendObject.insert("dds1_rf", mSearchDownConversionVec[inputIndex].RF);
@@ -412,42 +459,50 @@ void NewWidget::on_m_pBtnPhaseLock_clicked()
 
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
-
     emit sendMessage(bytes);
+    this->on_m_pBtnSendMsg_clicked();
 }
 
 void NewWidget::on_m_pBtnSendMsg_clicked()
 {
-    qint64 mDDS1ControlWord = (ui->m_pDSpinBoxDDS1Freq->value() / 400.0) * (((long long)1) << 48);
-    qint64 mDDS2ControlWord = (ui->m_pDSpinBoxDDS2Freq->value() / 300.0) * (((long long)1) << 48);
+    requireVec.append(eMsgSend);
+    ui->m_pBtnPhaseLock->setEnabled(false);
+    ui->m_pBtnSendMsg->setEnabled(false);
+    qint64 mDDS1ControlWord = (ui->m_pDSpinBoxDDS1Freq->value() / 400000000.0) * (((long long)1) << 48);
+    qint64 mDDS2ControlWord = (ui->m_pDSpinBoxDDS2Freq->value() / 300000000.0) * (((long long)1) << 48);
     int inputIndex = findAttenuation(ui->m_pSpinBoxInputPower->value(), mDownConversionVec);
     int outputIndex = findUPAttenuation(ui->m_pDSpinBoxOutputPower->value(), mUpConversionVec);
-    bool mFilterWord = ui->m_pLineEdit300_400->text().toInt()>400?true:false;
+    bool mFilterWord = ui->m_pLineEdit300_400->text().toInt()==400?true:false;
 
     QJsonObject sendObject;
-
     sendObject.insert("type", "normal");
     sendObject.insert("filter_word", mFilterWord);
     sendObject.insert("lo", ui->m_pLineEdit300_400->text().toInt());
-
     sendObject.insert("dds1_control", QString::number(mDDS1ControlWord));
     sendObject.insert("dds2_control", QString::number(mDDS2ControlWord));
-
     sendObject.insert("dds1_rf", mDownConversionVec[inputIndex].RF);
     sendObject.insert("dds1_lf", mDownConversionVec[inputIndex].LF);
     sendObject.insert("dds2_rf", mUpConversionVec[outputIndex].RF);
     sendObject.insert("dds2_lf_1", mUpConversionVec[outputIndex].LF_ONE);
     sendObject.insert("dds2_lf_2", mUpConversionVec[outputIndex].LF_TWO);
-
-
     QJsonDocument document;
     document.setObject(sendObject);
-
     QByteArray bytes = document.toJson();
     emit sendMessage(bytes);
 }
 
 void NewWidget::on_m_pDSpinBoxDDS2Freq_valueChanged(double arg1)
 {
+    outputFreqValue();
+}
+
+void NewWidget::on_m_pComBoxDataList_currentTextChanged(const QString &arg1)
+{
+    loadData(QApplication::applicationDirPath()+"\\data\\"+ui->m_pComBoxDataList->currentText());
+}
+
+void NewWidget::on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1)
+{
+    DROValue(!ui->m_pCBLinkage->isChecked());
     outputFreqValue();
 }

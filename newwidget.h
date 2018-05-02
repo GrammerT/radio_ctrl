@@ -25,6 +25,10 @@ struct UPConversion
 
 class NewWidget : public QWidget
 {
+    enum MsgType{
+        eLockPhase,
+        eMsgSend
+    };
     Q_OBJECT
 
 public:
@@ -58,6 +62,10 @@ private slots:
 
     void on_m_pDSpinBoxDDS2Freq_valueChanged(double arg1);
 
+    void on_m_pComBoxDataList_currentTextChanged(const QString &arg1);
+
+    void on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1);
+
 private:
     void initWidget();
     void initControl(bool);
@@ -74,12 +82,14 @@ private:
 
     void saveParamsToJson();
     void restoreParamsFromJson();
-
+    void initComboBox();
+    void loadData(QString datapath);
 private:
     Ui::NewWidget *ui;
     QVector<Conversion> mDownConversionVec;
     QVector<Conversion> mSearchDownConversionVec;
     QVector<UPConversion> mUpConversionVec;
+    QVector<MsgType> requireVec;
     QThread mWorkerThread;
 };
 
