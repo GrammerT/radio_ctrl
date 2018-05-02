@@ -80,7 +80,7 @@ void NewWidget::initWidget()
 {
     QPalette palette = this->palette();
     palette.setBrush(QPalette::Window,
-            QBrush(QPixmap(":/image/background.png").scaled(
+            QBrush(QPixmap(":/image/background.jpg").scaled(
                 this->size(),
                 Qt::IgnoreAspectRatio,
                 Qt::SmoothTransformation)));            

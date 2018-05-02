@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </size>
   </property>
@@ -744,6 +744,176 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>100</y>
+     <width>172</width>
+     <height>83</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="1">
+     <widget class="QDoubleSpinBox" name="m_pDSBStartFrenq">
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>11111111</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" rowspan="3">
+     <widget class="QDoubleSpinBox" name="m_pDSBBujinFrenq">
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>11111111</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_25">
+      <property name="text">
+       <string>终止频率:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QDoubleSpinBox" name="m_pDSBEndFrenq">
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>11111111</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_23">
+      <property name="text">
+       <string>起始频率:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="3">
+     <widget class="QLabel" name="label_24">
+      <property name="text">
+       <string>步进频率:</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>360</y>
+     <width>172</width>
+     <height>83</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="1">
+     <widget class="QDoubleSpinBox" name="m_pDSBStartPower">
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>11111111</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" rowspan="3">
+     <widget class="QDoubleSpinBox" name="m_pDSBBujinpower">
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>11111111</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_26">
+      <property name="text">
+       <string>终止功率:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QDoubleSpinBox" name="m_pDSBEndPower">
+      <property name="maximumSize">
+       <size>
+        <width>110</width>
+        <height>11111111</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_27">
+      <property name="text">
+       <string>起始功率:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="3">
+     <widget class="QLabel" name="label_28">
+      <property name="text">
+       <string>步进功率:</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>20</y>
+     <width>181</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_8">
+    <item>
+     <widget class="QCheckBox" name="m_pCBScanFreq">
+      <property name="text">
+       <string>频率扫描</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="m_pCBScanpower">
+      <property name="text">
+       <string>功率扫描</string>
       </property>
      </widget>
     </item>

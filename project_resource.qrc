@@ -4,10 +4,10 @@
         <file>image/downButton.png</file>
         <file>image/upButton.png</file>
         <file>image/arrowBottom.png</file>
-        <file>image/background.png</file>
         <file>image/help.png</file>
         <file>image/checkboxselected.png</file>
         <file>image/checkboxunselected.png</file>
         <file>image/icon.ico</file>
+        <file>image/background.jpg</file>
     </qresource>
 </RCC>
