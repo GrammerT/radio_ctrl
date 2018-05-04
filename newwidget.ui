@@ -767,8 +767,11 @@
         <height>11111111</height>
        </size>
       </property>
+      <property name="minimum">
+       <double>-999999999999999945322333868247445125709646570021247924665841614848.000000000000000</double>
+      </property>
       <property name="maximum">
-       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+       <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -780,8 +783,11 @@
         <height>11111111</height>
        </size>
       </property>
+      <property name="minimum">
+       <double>-999999999999999945322333868247445125709646570021247924665841614848.000000000000000</double>
+      </property>
       <property name="maximum">
-       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+       <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -800,8 +806,11 @@
         <height>11111111</height>
        </size>
       </property>
+      <property name="minimum">
+       <double>-999999999999999945322333868247445125709646570021247924665841614848.000000000000000</double>
+      </property>
       <property name="maximum">
-       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+       <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -839,8 +848,20 @@
         <height>11111111</height>
        </size>
       </property>
+      <property name="suffix">
+       <string>dBm</string>
+      </property>
+      <property name="minimum">
+       <double>-999999999999999945322333868247445125709646570021247924665841614848.000000000000000</double>
+      </property>
       <property name="maximum">
-       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+       <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>-10.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -852,8 +873,11 @@
         <height>11111111</height>
        </size>
       </property>
+      <property name="minimum">
+       <double>-999999999999999945322333868247445125709646570021247924665841614848.000000000000000</double>
+      </property>
       <property name="maximum">
-       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+       <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -872,8 +896,17 @@
         <height>11111111</height>
        </size>
       </property>
+      <property name="suffix">
+       <string>dBm</string>
+      </property>
+      <property name="minimum">
+       <double>-999999999999999945322333868247445125709646570021247924665841614848.000000000000000</double>
+      </property>
       <property name="maximum">
-       <double>10000000000000000725314363815292351261583744096465219555182101554790400.000000000000000</double>
+       <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>-10.000000000000000</double>
       </property>
      </widget>
     </item>

@@ -509,5 +509,32 @@ void NewWidget::on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1)
 
 void NewWidget::on_m_pBtnStartScan_clicked()
 {
+    requireVec.append(eMsgSend);
+    QJsonObject sendObject;
+    sendObject.insert("freq_start",QString::number(ui->m_pDSBStartFrenq->value()));
+    sendObject.insert("freq_step", QString::number(ui->m_pDSBBujinFrenq->value()));
+    sendObject.insert("freq_stop", QString::number(ui->m_pDSBEndFrenq->value()));
+    sendObject.insert("freq_enable", QString::number(ui->m_pCBScanFreq->isChecked()));
+
+    QFile file(QApplication::applicationDirPath()+"\\data\\"+ui->m_pComBoxDataList->currentText()+"\\up_conversion.txt");//路径需要修改成实际使用路径
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::warning(this,tr("\351\224\231\350\257\257"),tr("\346\211\223\345\274\200%1\345\244\261\350\264\245"));
+        return;
+    }
+    QByteArray m_bytes = file.readAll();
+    QString m_data(m_bytes);
+    file.close();
+    sendObject.insert("up_power_enable", QString::number(ui->m_pCBScanpower->isChecked()));
+    sendObject.insert("power_table", m_data);
+    sendObject.insert("power_start",QString::number(ui->m_pDSBStartPower->value() * -1));//功率实际为-dBm
+//    sendObject.insert("power_step",QString::number(ui->m_pDSBBujinFrenq->value()));//功率实际为-dBm
+    sendObject.insert("power_step",QString::number(0.1));
+    sendObject.insert("power_stop",QString::number(ui->m_pDSBEndPower->value()* -1));//功率实际为-dBm
+
+    QJsonDocument document;
+    document.setObject(sendObject);
+    QByteArray bytes = document.toJson();
+    emit sendMessage(bytes);
 
 }

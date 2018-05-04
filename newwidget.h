@@ -42,6 +42,7 @@ public slots:
 signals:
     void connectToServer(QString ipAddr);
     void sendMessage(QByteArray bytes);
+    void sendScanMessage(QByteArray bytes);
 
 
 protected:

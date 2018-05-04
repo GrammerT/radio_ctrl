@@ -34,13 +34,15 @@ void NetworkTaskWorker::onConnectToServer(QString ipAddr)
 void NetworkTaskWorker::onSendMessage(QByteArray bytes)
 {
     zmq_msg_t message;
+    zmq_msg_t msg_rep;
+    zmq_msg_init_size (&msg_rep, 100);
     if(conn_flag == 1)
     {
         qDebug()<<"onsend message";
         zmq_msg_init_size (&message, bytes.length());
         memcpy(zmq_msg_data(&message), bytes.data(), bytes.length());
         zmq_msg_send(&message, request, 0);
-        zmq_msg_recv(&message, request, 0);
+        zmq_msg_recv(&msg_rep, request, 0);
         emit sendFinished();
     }
 }
