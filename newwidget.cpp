@@ -470,6 +470,7 @@ void NewWidget::on_m_pBtnSendMsg_clicked()
     ui->m_pBtnSendMsg->setEnabled(false);
     qint64 mDDS1ControlWord = (ui->m_pDSpinBoxDDS1Freq->value() / 400000000.0) * (((long long)1) << 48);
     qint64 mDDS2ControlWord = (ui->m_pDSpinBoxDDS2Freq->value() / 300000000.0) * (((long long)1) << 48);
+    qint32 mPhase =((ui->m_pSpinBoxDDS2Phase->value())*16384)/2/3.1415;
     int inputIndex = findAttenuation(ui->m_pSpinBoxInputPower->value(), mDownConversionVec);
     int outputIndex = findUPAttenuation(ui->m_pDSpinBoxOutputPower->value(), mUpConversionVec);
     bool mFilterWord = ui->m_pLineEdit300_400->text().toInt()==400?true:false;
@@ -485,6 +486,7 @@ void NewWidget::on_m_pBtnSendMsg_clicked()
     sendObject.insert("dds2_rf", mUpConversionVec[outputIndex].RF);
     sendObject.insert("dds2_lf_1", mUpConversionVec[outputIndex].LF_ONE);
     sendObject.insert("dds2_lf_2", mUpConversionVec[outputIndex].LF_TWO);
+    sendObject.insert("dds2_phase", QString::number(mPhase));
     QJsonDocument document;
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
@@ -525,12 +527,13 @@ void NewWidget::on_m_pBtnStartScan_clicked()
     QByteArray m_bytes = file.readAll();
     QString m_data(m_bytes);
     file.close();
-    sendObject.insert("up_power_enable", QString::number(ui->m_pCBScanpower->isChecked()));
+
     sendObject.insert("power_table", m_data);
-    sendObject.insert("power_start",QString::number(ui->m_pDSBStartPower->value() * -1));//ｹｦﾂﾊﾊｵｼﾊﾎｪ-dBm
-//    sendObject.insert("power_step",QString::number(ui->m_pDSBBujinFrenq->value()));//ｹｦﾂﾊﾊｵｼﾊﾎｪ-dBm
-    sendObject.insert("power_step",QString::number(0.1));
-    sendObject.insert("power_stop",QString::number(ui->m_pDSBEndPower->value()* -1));//ｹｦﾂﾊﾊｵｼﾊﾎｪ-dBm
+    sendObject.insert("power_start",QString::number(ui->m_pDSBStartPower->value()));//ｹｦﾂﾊﾊｵｼﾊﾎｪ-dBm
+    sendObject.insert("power_step",QString::number(ui->m_pDSBBujinpower->value()));//ｹｦﾂﾊﾊｵｼﾊﾎｪ-dBm
+
+    sendObject.insert("power_stop",QString::number(ui->m_pDSBEndPower->value()));//ｹｦﾂﾊﾊｵｼﾊﾎｪ-dBm
+    sendObject.insert("up_power_enable", QString::number(ui->m_pCBScanpower->isChecked()));
 
     QJsonDocument document;
     document.setObject(sendObject);
