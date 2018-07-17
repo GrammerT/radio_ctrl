@@ -1,0 +1,5 @@
+LIBRARY ratio_dll
+
+EXPORTS
+add
+substract

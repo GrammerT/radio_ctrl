@@ -1,16 +1,19 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-01-27T13:29:01
+# Project created by QtCreator 2018-07-09T14:15:00
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       -= core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+TARGET = ratio_dll
+TEMPLATE = lib
 
-TARGET = untitled7
-TEMPLATE = app
-RC_FILE = icon.rc
+DEFINES += RATIO_DLL_LIBRARY
+
+SOURCES += ratio_dll.cpp
+
+HEADERS += ratio_dll.h
 
 INCLUDEPATH += "$$PWD/zmq_include"
 
@@ -27,7 +30,7 @@ CONFIG(debug, debug|release){
 
 CONFIG(release, debug|release){
     contains(QMAKE_TARGET.arch, x86){
-        LIBS += $$PWD/libs/release/x86/libzmq.lib
+        LIBS += $$PWD/libs/libzmq.lib
         message("release x86")
     }
     contains(QMAKE_TARGET.arch, x86_64){
@@ -36,16 +39,8 @@ CONFIG(release, debug|release){
     }
 }
 
-SOURCES += main.cpp\
-    NetworkTaskWorker.cpp \
-    newwidget.cpp
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}
 
-HEADERS  += \
-    NetworkTaskWorker.h \
-    newwidget.h
-
-RESOURCES += \
-    project_resource.qrc
-
-FORMS += \
-    newwidget.ui

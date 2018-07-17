@@ -1,4 +1,3 @@
-#include "widget.h"
 #include <QApplication>
 #include <QDebug>
 #include <QDir>
@@ -12,7 +11,5 @@ int main(int argc, char *argv[])
     qDebug() << QDir::currentPath();
     NewWidget w1;
     w1.show();
-//    Widget w;
-//    w.show();
     return a.exec();
 }
