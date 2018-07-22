@@ -1,5 +1,11 @@
 LIBRARY ratio_dll
 
 EXPORTS
-add
-substract
+initRatioCtrl
+addAB
+connectTo
+loadConversionAndUpConversion
+sendStartScanMsg
+sendPhaseLockMsg
+sendSetParamMsg
+destroyRatioCtrl

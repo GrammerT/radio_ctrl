@@ -3,11 +3,11 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-SOURCES += main.c
+SOURCES += main.cpp
 
-INCLUDEPATH += "$$PWD/../ratio_dll1"
+#INCLUDEPATH += "$$PWD/../../dll"
 
-DEPENDPATH  += "$$PWD/../ratio_dll1"
+#DEPENDPATH  += "$$PWD/../../dll"
 
 #CONFIG(debug, debug|release){
 #    contains(QMAKE_TARGET.arch, x86){

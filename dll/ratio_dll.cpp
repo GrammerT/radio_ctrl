@@ -20,20 +20,20 @@ struct UPConversion
     int LF_TWO;
 };
 
-void *m_pContext=NULL;
-void *request = NULL;
-int connFlag = 0;
-vector<Conversion> mDownConversionVec;
-vector<Conversion> mSearchDownConversionVec;
-vector<UPConversion> mUpConversionVec;
+static void *m_pContext=NULL;
+static void *request = NULL;
+static int connFlag = 0;
+static vector<Conversion> mDownConversionVec;
+static vector<Conversion> mSearchDownConversionVec;
+static vector<UPConversion> mUpConversionVec;
 
-void *initRatioCtrl()
+void * __stdcall  initRatioCtrl()
 {
     m_pContext = zmq_ctx_new();
     return m_pContext;
 }
 
-void destroyRatioCtrl(void *)
+void  __stdcall destroyRatioCtrl(void *)
 {
     if(m_pContext!=NULL)
     {
@@ -41,8 +41,9 @@ void destroyRatioCtrl(void *)
     }
 }
 
-int connectTo(string ip)
+int  __stdcall connectTo(const char **mip)
 {
+    string ip = *mip;
     if(ip.size()<=0)
         return false;
     const std::regex pattern("(\\d{1,3}).(\\d{1,3}).(\\d{1,3}).(\\d{1,3})");
@@ -105,7 +106,7 @@ int findAttenuation(double powerValue, const std::vector<Conversion> &conversion
     return index;
 }
 
-int findUPAttenuation(double powerValue, const std::vector<UPConversion> &conversionVec)
+int  findUPAttenuation(double powerValue, const std::vector<UPConversion> &conversionVec)
 {
     int index = 0;
     double minDistance = 0.0;
@@ -129,7 +130,7 @@ int findUPAttenuation(double powerValue, const std::vector<UPConversion> &conver
     return index;
 }
 
-int sendPhaseLockMsg(float dds1Freq, int dds1_rf, int dds1_lf)
+int  __stdcall sendPhaseLockMsg(float dds1Freq, int dds1_rf, int dds1_lf)
 {
     int dds1Freq1 = (dds1Freq/ 400000000.0) * (((long long)1) << 48);
     char str[] = "{type:search,"
@@ -142,11 +143,12 @@ int sendPhaseLockMsg(float dds1Freq, int dds1_rf, int dds1_lf)
     return sendMsg(buf,strlen(str));
 }
 
-int sendStartScanMsg(float freq_start,float freq_step,
+int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
                                     float freq_stop,int freq_enable,
-                                    string power_tabel_file_path, int power_start, int power_step,
+                                    char* mpower_tabel_file_path, int power_start, int power_step,
                                     int power_stop, int up_power_enable)
 {
+    string power_tabel_file_path = mpower_tabel_file_path;
     ifstream fs(power_tabel_file_path,ios::out);
     if(!fs.is_open())
     {
@@ -176,10 +178,15 @@ int sendStartScanMsg(float freq_start,float freq_step,
     return sendMsg(buf,strlen(str));
 }
 
-int loadConversionAndUpConversion(string downconversionpath,
-                                                            string searchconversionpath,
-                                                            string upconversionpath)
+int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
+                                                                              char** msearchconversionpath,
+                                                                              char** mupconversionpath)
 {
+    char * downconversionpath = *mdownconversionpath;
+    string m1 = downconversionpath;
+    string searchconversionpath = *msearchconversionpath;
+    string upconversionpath = *mupconversionpath;
+
     ifstream fs(downconversionpath,ios::out);
     if(!fs.is_open())
     {
@@ -228,10 +235,15 @@ int loadConversionAndUpConversion(string downconversionpath,
         upconversion.LF_TWO   =z1;
         mUpConversionVec.push_back(upconversion);
     }
-    return true;
+     fs.close();
+     searchfs.close();
+     upfs.close();
+
+    return 1;
 }
 
-int sendXXMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, bool is_400)
+
+int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
 {
     int mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
     int mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
@@ -275,46 +287,8 @@ int sendXXMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, i
     return sendMsg(buf,strlen(str));
 }
 
-int sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
+
+int __stdcall addAB(int a,int b)
 {
-    int mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
-    int mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
-    int mPhase = (DDS2Phase*16384)/2/3.1415;
-    int inputIndex = findAttenuation(inputPower, mDownConversionVec);
-    int outputIndex = findUPAttenuation(outputPower, mUpConversionVec);
-    int lo = 0;
-    if(is_400)
-    {
-        lo=400;
-    }
-    else
-    {
-        lo=300;
-    }
-    char str[] = "{type:normal,"
-                        "filter_word:%d,"
-                        "lo:%d,"
-                        "dds1_control:%d,"
-                        "dds2_control:%d,"
-                        "dds1_rf:%d,"
-                        "dds1_lf:%d,"
-                        "dds2_rf:%d,"
-                        "dds2_lf_1:%d,"
-                        "dds2_lf_2:%d,"
-                        "dds2_phase:%d}";
-    char *buf = (char*)malloc(strlen(str));
-    memset(buf,0,strlen(str));
-    sprintf(buf, str,
-            (int)is_400,
-            lo,
-            mDDS1word,
-            mDDS2word,
-            mDownConversionVec[inputIndex].RF,
-            mDownConversionVec[inputIndex].LF,
-            mUpConversionVec[outputIndex].RF,
-            mUpConversionVec[outputIndex].LF_ONE,
-            mUpConversionVec[outputIndex].LF_TWO,
-            mPhase
-            );
-    return sendMsg(buf,strlen(str));
+    return a+b;
 }

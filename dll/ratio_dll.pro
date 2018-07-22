@@ -15,11 +15,13 @@ SOURCES += ratio_dll.cpp
 
 HEADERS += ratio_dll.h
 
+DEF_FILE += "$$PWD/ratio_dll.def"
+
 INCLUDEPATH += "$$PWD/zmq_include"
 
 CONFIG(debug, debug|release){
     contains(QMAKE_TARGET.arch, x86){
-        LIBS += $$PWD/libs/debug/x86/libzmq.lib
+        LIBS += $$PWD/libs/libzmq.lib
         message("debug x86")
     }
     contains(QMAKE_TARGET.arch, x86_64){
