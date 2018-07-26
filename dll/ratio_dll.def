@@ -2,7 +2,6 @@ LIBRARY ratio_dll
 
 EXPORTS
 initRatioCtrl
-addAB
 connectTo
 loadConversionAndUpConversion
 sendStartScanMsg

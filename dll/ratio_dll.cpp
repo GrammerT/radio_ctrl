@@ -26,9 +26,22 @@ static int connFlag = 0;
 static vector<Conversion> mDownConversionVec;
 static vector<Conversion> mSearchDownConversionVec;
 static vector<UPConversion> mUpConversionVec;
+static string filename = "msg.txt";
+
+void recordMsg(string str)
+{
+    fstream fs;
+    fs.open(filename,ios::app);
+    if(fs.is_open())
+    {
+        fs<<str<<"\n";
+        fs.close();
+    }
+}
 
 void * __stdcall  initRatioCtrl()
 {
+    recordMsg("initRatioCtrl()");
     m_pContext = zmq_ctx_new();
     return m_pContext;
 }
@@ -44,6 +57,7 @@ void  __stdcall destroyRatioCtrl(void *)
 int  __stdcall connectTo(const char **mip)
 {
     string ip = *mip;
+    recordMsg("connectTo+"+ip);
     if(ip.size()<=0)
         return false;
     const std::regex pattern("(\\d{1,3}).(\\d{1,3}).(\\d{1,3}).(\\d{1,3})");
@@ -58,8 +72,10 @@ int  __stdcall connectTo(const char **mip)
     if(rc < 0)
     {
         connFlag = 0;
+        recordMsg("connectTo--flag--0");
         return false;
     }
+    recordMsg("connectTo--flag--1");
     connFlag = 1;
     return true;
 }
@@ -132,6 +148,7 @@ int  findUPAttenuation(double powerValue, const std::vector<UPConversion> &conve
 
 int  __stdcall sendPhaseLockMsg(float dds1Freq, int dds1_rf, int dds1_lf)
 {
+    recordMsg("sendPhaseLockMsg:");
     int dds1Freq1 = (dds1Freq/ 400000000.0) * (((long long)1) << 48);
     char str[] = "{type:search,"
                         "dds1_control:%d,"
@@ -140,6 +157,7 @@ int  __stdcall sendPhaseLockMsg(float dds1Freq, int dds1_rf, int dds1_lf)
                         "en:0}";
     char *buf = (char*)malloc(strlen(str));
     sprintf(buf, str, dds1Freq1, dds1_rf, dds1_lf);
+    recordMsg(buf);
     return sendMsg(buf,strlen(str));
 }
 
@@ -148,6 +166,7 @@ int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
                                     char* mpower_tabel_file_path, int power_start, int power_step,
                                     int power_stop, int up_power_enable)
 {
+    recordMsg("sendStartScanMsg:");
     string power_tabel_file_path = mpower_tabel_file_path;
     ifstream fs(power_tabel_file_path,ios::out);
     if(!fs.is_open())
@@ -175,6 +194,7 @@ int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
                         "up_power_enable:%d}";
     char *buf = (char*)malloc(strlen(str));
     sprintf(buf, str, freq_start, freq_step, freq_stop,freq_enable,str1,power_start,power_step,power_stop,(int)up_power_enable);
+    recordMsg(buf);
     return sendMsg(buf,strlen(str));
 }
 
@@ -182,6 +202,7 @@ int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
                                                                               char** msearchconversionpath,
                                                                               char** mupconversionpath)
 {
+    recordMsg("loadConversionAndUpConversion:");
     char * downconversionpath = *mdownconversionpath;
     string m1 = downconversionpath;
     string searchconversionpath = *msearchconversionpath;
@@ -190,18 +211,21 @@ int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
     ifstream fs(downconversionpath,ios::out);
     if(!fs.is_open())
     {
+        recordMsg(m1+" error!!!");
         cout<<downconversionpath<<" can't open!!!";
         return false;
     }
     ifstream searchfs(searchconversionpath,ios::out);
     if(!searchfs.is_open())
     {
+        recordMsg(searchconversionpath+" error!!!");
         cout<<searchconversionpath<<" can't open!!!";
         return false;
     }
     ifstream upfs(upconversionpath,ios::out);
     if(!upfs.is_open())
     {
+        recordMsg(upconversionpath+" error!!!");
         cout<<upconversionpath<<" can't open!!!";
         return false;
     }
@@ -245,6 +269,7 @@ int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
 
 int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
 {
+    recordMsg("sendSetParamMsg:");
     int mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
     int mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
     int mPhase = (DDS2Phase*16384)/2/3.1415;
@@ -284,11 +309,8 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, 
             mUpConversionVec[outputIndex].LF_TWO,
             mPhase
             );
+    recordMsg(buf);
     return sendMsg(buf,strlen(str));
 }
 
 
-int __stdcall addAB(int a,int b)
-{
-    return a+b;
-}

@@ -16,8 +16,6 @@
  * 先调用此函数进行初始化
  */
 RATIO_DLL_LIBRARY void* __stdcall initRatioCtrl();
-RATIO_DLL_LIBRARY int __stdcall addAB(int a,int b);
-
 /**
  * 连接固定ip地址
  */
