@@ -4,6 +4,7 @@
 #include <fstream>
 #include "zmq.h"
 #include <vector>
+#include <strstream>
 
 using namespace std;
 struct Conversion
@@ -82,6 +83,12 @@ int  __stdcall connectTo(const char **mip)
 
 int sendMsg(char *data, int data_size)
 {
+    recordMsg(data);
+    std::string result3;
+    std::strstream ss3;
+    ss3 <<  data_size;
+    ss3 >> result3;
+    recordMsg(result3);
     zmq_msg_t message;
     zmq_msg_t msg_rep;
     zmq_msg_init_size (&msg_rep, 100);
@@ -146,56 +153,109 @@ int  findUPAttenuation(double powerValue, const std::vector<UPConversion> &conve
     return index;
 }
 
-int  __stdcall sendPhaseLockMsg(float dds1Freq, int dds1_rf, int dds1_lf)
+int  __stdcall sendPhaseLockMsg(float dds1Freq, double OutputPwd)
 {
     recordMsg("sendPhaseLockMsg:");
-    int dds1Freq1 = (dds1Freq/ 400000000.0) * (((long long)1) << 48);
-    char str[] = "{type:search,"
-                        "dds1_control:%d,"
-                        "dds1_rf:%d,"
-                        "dds1_lf:%d,"
-                        "en:0}";
-    char *buf = (char*)malloc(strlen(str));
-    sprintf(buf, str, dds1Freq1, dds1_rf, dds1_lf);
+    int index = findAttenuation(OutputPwd,mSearchDownConversionVec);
+    long long dds1Freq1 = (dds1Freq/ 400000000.0) * (((long long)1) << 48);
+    std::string result3;
+    std::strstream ss3;
+    ss3 <<  dds1Freq1;
+    ss3 >> result3;
+    char str[] = "{\"dds1_control\":\"%s\","
+                        "\"dds1_rf\":%d,"
+                        "\"dds1_lf\":%d,"
+                        "\"type\":\"search\","
+                        "\"en\":0}";
+    char *buf = (char*)malloc(1024);
+    sprintf(buf, str, result3.c_str(), mSearchDownConversionVec[index].RF, mSearchDownConversionVec[index].LF);
     recordMsg(buf);
-    return sendMsg(buf,strlen(str));
+    return sendMsg(buf,1024);
 }
 
 int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
-                                    float freq_stop,int freq_enable,
-                                    char* mpower_tabel_file_path, int power_start, int power_step,
-                                    int power_stop, int up_power_enable)
+                                float freq_stop,int freq_enable,
+                                const char** mpower_tabel_file_path, float power_start, float power_step,
+                                float power_stop, int up_power_enable)
 {
     recordMsg("sendStartScanMsg:");
-    string power_tabel_file_path = mpower_tabel_file_path;
+    string power_tabel_file_path = *mpower_tabel_file_path;
     ifstream fs(power_tabel_file_path,ios::out);
     if(!fs.is_open())
     {
-        cout<<power_tabel_file_path<<" can't open!!!";
+        recordMsg(" can't open!!!");
         return false;
     }
     fs.seekg(0,std::ios::end);
     int length = fs.tellg();
     fs.seekg(0,ios::beg);
-    char *buff = new char[length+1];
-    memset(buff,0,length+1);
+    char *buff = new char[length];
+    memset(buff,0,length);
     fs.read(buff,length);
     fs.close();
     string str1;
     str1 = buff;
-    char str[] = "{freq_start:%f,"
-                        "freq_step:%f,"
-                        "freq_stop:%f,"
-                        "freq_enable:%d,"
-                        "power_table:%s"
-                        "power_start:%f,"
-                        "power_step:%f,"
-                        "power_stop:%f,"
-                        "up_power_enable:%d}";
-    char *buf = (char*)malloc(strlen(str));
-    sprintf(buf, str, freq_start, freq_step, freq_stop,freq_enable,str1,power_start,power_step,power_stop,(int)up_power_enable);
+    delete buff;
+//    recordMsg(str1);
+
+    std::string freq_start_s;
+    std::strstream ss3;
+    ss3 <<  freq_start;
+    ss3 >> freq_start_s;
+    ss3.clear();
+
+    std::string freq_step_s;
+    ss3 <<  freq_step;
+    ss3 >> freq_step_s;
+    ss3.clear();
+
+    std::string freq_stop_s;
+    ss3 <<  freq_stop;
+    ss3 >> freq_stop_s;
+    ss3.clear();
+
+    std::string freq_enable_s;
+    ss3 <<  freq_enable;
+    ss3 >> freq_enable_s;
+    ss3.clear();
+
+    std::string power_start_s;
+    ss3 <<  power_start;
+    ss3 >> power_start_s;
+    ss3.clear();
+
+    std::string power_step_s;
+    ss3 <<  power_step;
+    ss3 >> power_step_s;
+    ss3.clear();
+
+    std::string power_stop_s;
+    ss3 <<  power_stop;
+    ss3 >> power_stop_s;
+    ss3.clear();
+
+    std::string up_power_enable_s;
+    ss3 <<  up_power_enable;
+    ss3 >> up_power_enable_s;
+    ss3.clear();
+
+
+
+    char str[] = "{\"freq_start\":\"%s\","
+                        "\"freq_step\":\"%s\","
+                        "\"freq_stop\":\"%s\","
+                        "\"freq_enable\":\"%s\","
+                        "\"power_table\":\"%s\","
+                        "\"power_start\":\"%s\","
+                        "\"power_step\":\"%s\","
+                        "\"power_stop\":\"%s\","
+                        "\"up_power_enable\":\"%s\"}";
+    char *buf = (char*)malloc(10240);
+    int ret =sprintf(buf, str, freq_start_s.c_str(), freq_step_s.c_str(), freq_stop_s.c_str(),freq_enable_s.c_str(),str1.c_str(),
+                    power_start_s.c_str(),power_step_s.c_str(),power_stop_s.c_str(),up_power_enable_s.c_str());
+
     recordMsg(buf);
-    return sendMsg(buf,strlen(str));
+    return sendMsg(buf,10240);
 }
 
 int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
@@ -270,47 +330,65 @@ int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
 int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
 {
     recordMsg("sendSetParamMsg:");
-    int mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
-    int mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
+    long long mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
+    long long mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
     int mPhase = (DDS2Phase*16384)/2/3.1415;
     int inputIndex = findAttenuation(inputPower, mDownConversionVec);
     int outputIndex = findUPAttenuation(outputPower, mUpConversionVec);
     int lo = 0;
+    string b_400 = "false";
     if(is_400)
     {
+        b_400 = "true";
         lo=400;
     }
     else
     {
         lo=300;
     }
-    char str[] = "{type:normal,"
-                        "filter_word:%d,"
-                        "lo:%d,"
-                        "dds1_control:%d,"
-                        "dds2_control:%d,"
-                        "dds1_rf:%d,"
-                        "dds1_lf:%d,"
-                        "dds2_rf:%d,"
-                        "dds2_lf_1:%d,"
-                        "dds2_lf_2:%d,"
-                        "dds2_phase:%d}";
-    char *buf = (char*)malloc(strlen(str));
-    memset(buf,0,strlen(str));
+    char str[] = "{ \"type\":\"normal\","
+                        "\"filter_word\":%s,"
+                        "\"lo\":%d,"
+                        "\"dds1_control\":\"%s\","
+                        "\"dds2_control\":\"%s\","
+                        "\"dds1_rf\":%d,"
+                        "\"dds1_lf\":%d,"
+                        "\"dds2_rf\":%d,"
+                        "\"dds2_lf_1\":%d,"
+                        "\"dds2_lf_2\":%d,"
+                        "\"dds2_phase\":\"%s\"}";
+
+    std::string result1;
+    std::strstream ss1;
+
+    std::string result2;
+    std::strstream ss2;
+
+    ss1 <<  mDDS1word;
+    ss1 >> result1;
+    ss2 <<  mDDS2word;
+    ss2 >> result2;
+
+    std::string result3;
+    std::strstream ss3;
+    ss3 <<  mPhase;
+    ss3 >> result3;
+    char *buf = (char*)malloc(1024);
+    memset(buf,0,1024);
     sprintf(buf, str,
-            (int)is_400,
+            b_400.c_str(),
             lo,
-            mDDS1word,
-            mDDS2word,
+            result1.c_str(),
+            result2.c_str(),
             mDownConversionVec[inputIndex].RF,
             mDownConversionVec[inputIndex].LF,
             mUpConversionVec[outputIndex].RF,
             mUpConversionVec[outputIndex].LF_ONE,
             mUpConversionVec[outputIndex].LF_TWO,
-            mPhase
+            result3.c_str()
             );
     recordMsg(buf);
-    return sendMsg(buf,strlen(str));
+    return sendMsg(buf,1024);
 }
 
 

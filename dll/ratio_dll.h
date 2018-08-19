@@ -19,26 +19,24 @@ RATIO_DLL_LIBRARY void* __stdcall initRatioCtrl();
 /**
  * 连接固定ip地址
  */
-RATIO_DLL_LIBRARY int __stdcall  connectTo(char **mip);
+RATIO_DLL_LIBRARY int __stdcall  connectTo(const char **mip);
 ///**
 // * 载入配置文件，形式参考data文件夹中的数据
 // */
-RATIO_DLL_LIBRARY int __stdcall  loadConversionAndUpConversion( char** mdownconversionpath,
-                                                                                                    char** msearchconversionpath,
-                                                                                                    char** mupconversionpath);
+RATIO_DLL_LIBRARY int __stdcall  loadConversionAndUpConversion(const char** mdownconversionpath,
+                                                                                                    const char** msearchconversionpath,
+                                                                                                    const char** mupconversionpath);
 ///**
 // * 发送开始扫描指令
 // */
 RATIO_DLL_LIBRARY int __stdcall sendStartScanMsg(float freq_start,float freq_step,
                                                                         float freq_stop,int freq_enable,
-                                                                        char* mpower_tabel_file_path, int power_start, int power_step,
-                                                                        int power_stop, int up_power_enable);
+                                                                        const char** mpower_tabel_file_path, float power_start, float power_step,
+                                                                        float power_stop, int up_power_enable);
 ///**
 // *发送锁相捕获指令
 // */
-RATIO_DLL_LIBRARY int __stdcall sendPhaseLockMsg(float dds1Freq,
-                                                                            int dds1_rf,
-                                                                            int dds1_lf);
+RATIO_DLL_LIBRARY int __stdcall sendPhaseLockMsg(float dds1Freq,double OutputPwd);
 ///**
 // * 发送设置参数指令
 // */
