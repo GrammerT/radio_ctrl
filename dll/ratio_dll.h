@@ -19,13 +19,13 @@ RATIO_DLL_LIBRARY void* __stdcall initRatioCtrl();
 /**
  * 连接固定ip地址
  */
-RATIO_DLL_LIBRARY int __stdcall  connectTo(char **mip);
+RATIO_DLL_LIBRARY int __stdcall  connectTo(const char **mip);
 ///**
 // * 载入配置文件，形式参考data文件夹中的数据
 // */
-RATIO_DLL_LIBRARY int __stdcall  loadConversionAndUpConversion( char** mdownconversionpath,
-                                                                                                    char** msearchconversionpath,
-                                                                                                    char** mupconversionpath);
+RATIO_DLL_LIBRARY int __stdcall  loadConversionAndUpConversion(const char** mdownconversionpath,
+                                                                                                    const char** msearchconversionpath,
+                                                                                                    const char** mupconversionpath);
 ///**
 // * 发送开始扫描指令
 // */
