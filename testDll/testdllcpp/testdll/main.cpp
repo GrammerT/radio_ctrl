@@ -8,10 +8,12 @@
 //#endif
 
 typedef void*  (__stdcall *DLLCdeclInit)();
-typedef int  (__stdcall *DLLCdeclSetParam)(double ,double ,int ,int ,int ,int);
-typedef int  (__stdcall *DLLCdeclSetPath)(const char**,const  char** ,const char** );
-typedef int  (__stdcall *DLLCdecladd)(int ,int );
 typedef int  (__stdcall *DLLCdeclConn)(const char ** );
+typedef int  (__stdcall *DLLCdeclSetPath)(const char**,const  char** ,const char** );
+typedef int  (__stdcall *DLLCdeclStartScan)(float,float,float ,int ,const char** , float , float ,float , int  );
+typedef int  (__stdcall *DLLCdeclPhaseLockMsg)(float ,double );
+typedef int  (__stdcall *DLLCdeclSetParam)(double ,double ,int ,int ,int ,int);
+typedef int  (__stdcall *DLLCdecladd)(int ,int );
 
 //#ifdef __cplusplus
 //}
@@ -25,7 +27,7 @@ int main(int argc, char *argv[])
     char message[80];
     //	HINSTANCE hinstLib;
     HMODULE hinstLib;
-//    DLLCdeclFunction DLLFunction;
+    //    DLLCdeclFunction DLLFunction;
 
     hinstLib = LoadLibraryEx(L"E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\dll\\debug\\ratio_dll.dll",NULL,LOAD_WITH_ALTERED_SEARCH_PATH);
     DWORD dw = GetLastError();
@@ -46,31 +48,46 @@ int main(int argc, char *argv[])
         }
         int ret=0;
         DLLCdeclSetPath setpath = (DLLCdeclSetPath)GetProcAddress(hinstLib, "loadConversionAndUpConversion");
+        const char *down = "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\down_conversion.txt";
+        const    char *down1 =   "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\search_down_conversion.txt";
+        const char *down2 =    "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\up_conversion.txt";
         if(setpath!=NULL)
         {
-
-//            char down[512] = "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\down_conversion.txt";
-//                 char down1[512] =   "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\search_down_conversion.txt";
-//                char down2[512] =    "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\up_conversion.txt";
-
-           const char *down = "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\down_conversion.txt";
-             const    char *down1 =   "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\search_down_conversion.txt";
-               const char *down2 =    "E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\data\\data1\\up_conversion.txt";
-//                char *mdown = (char*)malloc(sizeof(strlen(down)+1));
-//                memset(mdown,0,strlen(down)+1);
-//                memcpy(mdown,down,strlen(down));
             ret = setpath(&down,&down1,&down2);
         }
-        DLLCdeclSetParam DLLFunction1 = (DLLCdeclSetParam)GetProcAddress(hinstLib, "sendSetParamMsg");
-        //取函数指针地址
-        // If the function address is valid, call the function.
-        if ( DLLFunction1 != NULL)   //dll中有函数sendSetParamMsg()
         {
-            std::cout<<111111111<<std::endl;
-            DLLFunction1(2,3,3,3,3,3);
-            std::cout<<222222222<<std::endl;
+            DLLCdeclSetParam DLLFunction1 = (DLLCdeclSetParam)GetProcAddress(hinstLib, "sendSetParamMsg");
+            //取函数指针地址
+            // If the function address is valid, call the function.
+            if ( DLLFunction1 != NULL)   //dll中有函数sendSetParamMsg()
+            {
+                std::cout<<111111111<<std::endl;
+//                DLLFunction1(2,3,3,3,3,3);
+                std::cout<<222222222<<std::endl;
+            }
         }
-
+        {
+            DLLCdeclStartScan DLLFunction2 = (DLLCdeclStartScan)GetProcAddress(hinstLib, "sendStartScanMsg");
+            //取函数指针地址
+            // If the function address is valid, call the function.
+            if ( DLLFunction2 != NULL)   //dll中有函数sendSetParamMsg()
+            {
+                std::cout<<111111111<<std::endl;
+                DLLFunction2(107368230,100,109368230,1,&down2,-10,0,-10,0);
+                std::cout<<222222222<<std::endl;
+            }
+        }
+        {
+            DLLCdeclPhaseLockMsg DLLFunction3 = (DLLCdeclPhaseLockMsg)GetProcAddress(hinstLib, "sendPhaseLockMsg");
+            //取函数指针地址
+            // If the function address is valid, call the function.
+            if ( DLLFunction3 != NULL)   //dll中有函数sendSetParamMsg()
+            {
+                std::cout<<111111111<<std::endl;
+//                DLLFunction3(2,3,3,3,3,3);
+                std::cout<<222222222<<std::endl;
+            }
+        }
         // Free the DLL module
         BOOL fFreeResult = FreeLibrary(hinstLib);//卸载动态链接库ratio_dll.dll
 
