@@ -5,8 +5,8 @@
 #include "zmq.h"
 #include <vector>
 #include <strstream>
-#include <QByteArray>
-#include <QDebug>
+//#include <QByteArray>
+//#include <QDebug>
 
 using namespace std;
 struct Conversion
@@ -98,13 +98,13 @@ int sendMsg(char *data, int data_size)
     {
         zmq_msg_init_size (&message, data_size);
         memcpy(zmq_msg_data(&message), data, data_size);
-        char json[102400];
-        memset(json,0,102400);
-        if (data_size<102400)
-            memcpy(json, zmq_msg_data(&message), data_size);
-        QByteArray m_jarray(json, data_size);
-        qDebug()<<"-----server---"<<m_jarray;
-        recordMsg(m_jarray.toStdString());
+//        char json[102400];
+//        memset(json,0,102400);
+//        if (data_size<102400)
+//            memcpy(json, zmq_msg_data(&message), data_size);
+//        QByteArray m_jarray(json, data_size);
+//        qDebug()<<"-----server---"<<m_jarray;
+//        recordMsg(m_jarray.toStdString());
         zmq_msg_send(&message, request, 0);
         zmq_msg_recv(&msg_rep, request, 0);
         free(data);

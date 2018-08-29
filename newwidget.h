@@ -43,7 +43,7 @@ signals:
     void connectToServer(QString ipAddr);
     void sendMessage(QByteArray bytes);
     void sendScanMessage(QByteArray bytes);
-
+    void sig_setpath(QString);
 
 protected:
     virtual void paintEvent(QPaintEvent *event)override;

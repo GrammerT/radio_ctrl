@@ -14,6 +14,7 @@
 #include <QUrl>
 #include <QProcess>
 #include "NetworkTaskWorker.h"
+#include "ratio_dll.h"
 
 NewWidget::NewWidget(QWidget *parent) :
     QWidget(parent),
@@ -151,6 +152,7 @@ void NewWidget::initNetworkTask()
     connect(this, &NewWidget::sendMessage, worker, &NetworkTaskWorker::onSendMessage);
     connect(worker, &NetworkTaskWorker::connected, this, &NewWidget::onConnected);
     connect(worker, &NetworkTaskWorker::sendFinished, this, &NewWidget::onSendFinished);
+    connect(this,SIGNAL(sig_setpath(QString)),worker,SLOT(setFilePath(QString)));
     mWorkerThread.start();
 }
 
@@ -367,6 +369,8 @@ void NewWidget::loadData(QString datapath)
     loadConversion(datapath+"\\down_conversion.txt", mDownConversionVec);
     loadConversion(datapath+"\\search_down_conversion.txt", mSearchDownConversionVec);
     loadUPConversion(datapath+"\\up_conversion.txt", mUpConversionVec);
+    emit sig_setpath(datapath);
+//    loadConversionAndUpConversion(&down,&search,&up);
 }
 
 void NewWidget::on_m_pDSpinBoxInputFreq_valueChanged(double arg1)
@@ -438,7 +442,7 @@ void NewWidget::on_m_pBtnConnWifi_clicked()
 
 void NewWidget::on_m_pBtnPhaseLock_clicked()
 {
-    this->on_m_pBtnSendMsg_clicked();
+//    this->on_m_pBtnSendMsg_clicked();
     requireVec.append(eLockPhase);
     ui->m_pBtnPhaseLock->setText(tr("\346\215\225\350\216\267\344\270\255..."));
     ui->m_pBtnPhaseLock->setEnabled(false);
@@ -459,8 +463,9 @@ void NewWidget::on_m_pBtnPhaseLock_clicked()
 
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
+
     emit sendMessage(bytes);
-    this->on_m_pBtnSendMsg_clicked();
+//    this->on_m_pBtnSendMsg_clicked();
 }
 
 void NewWidget::on_m_pBtnSendMsg_clicked()
