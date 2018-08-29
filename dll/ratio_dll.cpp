@@ -5,6 +5,8 @@
 #include "zmq.h"
 #include <vector>
 #include <strstream>
+#include <QByteArray>
+#include <QDebug>
 
 using namespace std;
 struct Conversion
@@ -96,6 +98,13 @@ int sendMsg(char *data, int data_size)
     {
         zmq_msg_init_size (&message, data_size);
         memcpy(zmq_msg_data(&message), data, data_size);
+        char json[102400];
+        memset(json,0,102400);
+        if (data_size<102400)
+            memcpy(json, zmq_msg_data(&message), data_size);
+        QByteArray m_jarray(json, data_size);
+        qDebug()<<"-----server---"<<m_jarray;
+        recordMsg(m_jarray.toStdString());
         zmq_msg_send(&message, request, 0);
         zmq_msg_recv(&msg_rep, request, 0);
         free(data);
@@ -153,7 +162,7 @@ int  findUPAttenuation(double powerValue, const std::vector<UPConversion> &conve
     return index;
 }
 
-int  __stdcall sendPhaseLockMsg(float dds1Freq, double OutputPwd)
+int  __stdcall sendPhaseLockMsg(double dds1Freq, double OutputPwd)
 {
     recordMsg("sendPhaseLockMsg:");
     int index = findAttenuation(OutputPwd,mSearchDownConversionVec);
@@ -168,9 +177,10 @@ int  __stdcall sendPhaseLockMsg(float dds1Freq, double OutputPwd)
                         "\"type\":\"search\","
                         "\"en\":0}";
     char *buf = (char*)malloc(1024);
-    sprintf(buf, str, result3.c_str(), mSearchDownConversionVec[index].RF, mSearchDownConversionVec[index].LF);
+    memset(buf,0,1024);
+    int ret = sprintf(buf, str, result3.c_str(), mSearchDownConversionVec[index].RF, mSearchDownConversionVec[index].LF);
     recordMsg(buf);
-    return sendMsg(buf,1024);
+    return sendMsg(buf,ret);
 }
 
 int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
@@ -244,18 +254,19 @@ int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
     char str[] = "{\"freq_start\":\"%s\","
                         "\"freq_step\":\"%s\","
                         "\"freq_stop\":\"%s\","
-                        "\"freq_enable\":\"%s\","
+                        "\"freq_eable\":\"%s\","
                         "\"power_table\":\"%s\","
                         "\"power_start\":\"%s\","
                         "\"power_step\":\"%s\","
                         "\"power_stop\":\"%s\","
                         "\"up_power_enable\":\"%s\"}";
     char *buf = (char*)malloc(10240);
+    memset(buf,0,10240);
     int ret =sprintf(buf, str, freq_start_s.c_str(), freq_step_s.c_str(), freq_stop_s.c_str(),freq_enable_s.c_str(),str1.c_str(),
                     power_start_s.c_str(),power_step_s.c_str(),power_stop_s.c_str(),up_power_enable_s.c_str());
 
     recordMsg(buf);
-    return sendMsg(buf,10240);
+    return sendMsg(buf,ret );
 }
 
 int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
@@ -375,7 +386,7 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, 
     ss3 >> result3;
     char *buf = (char*)malloc(1024);
     memset(buf,0,1024);
-    sprintf(buf, str,
+    int ret = sprintf(buf, str,
             b_400.c_str(),
             lo,
             result1.c_str(),
@@ -388,7 +399,7 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, 
             result3.c_str()
             );
     recordMsg(buf);
-    return sendMsg(buf,1024);
+    return sendMsg(buf,ret);
 }
 
 

@@ -36,7 +36,7 @@ RATIO_DLL_LIBRARY int __stdcall sendStartScanMsg(float freq_start,float freq_ste
 ///**
 // *发送锁相捕获指令
 // */
-RATIO_DLL_LIBRARY int __stdcall sendPhaseLockMsg(float dds1Freq,double OutputPwd);
+RATIO_DLL_LIBRARY int __stdcall sendPhaseLockMsg(double dds1Freq,double OutputPwd);
 ///**
 // * 发送设置参数指令
 // */

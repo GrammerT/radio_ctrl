@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
+QT       += core
 
 TARGET = ratio_dll
 TEMPLATE = lib
