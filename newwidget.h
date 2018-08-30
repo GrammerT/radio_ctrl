@@ -44,6 +44,12 @@ signals:
     void sendMessage(QByteArray bytes);
     void sendScanMessage(QByteArray bytes);
     void sig_setpath(QString);
+    void sig_setParam(double /*DDS1Freq*/, double /*DDS2Freq*/, int /*DDS2Phase*/, int /*inputPower*/, int /*outputPower*/, int /*is_400*/);
+    void sig_phaseLock(double /*dds1Freq*/, double /*OutputPwd*/);
+    void sig_startScan(float /*freq_start*/,float /*freq_step*/,
+                       float /*freq_stop*/,int /*freq_enable*/,
+                       const char** /*mpower_tabel_file_path*/, float /*power_start*/, float /*power_step*/,
+                       float /*power_stop*/, int /*up_power_enable*/);
 
 protected:
     virtual void paintEvent(QPaintEvent *event)override;

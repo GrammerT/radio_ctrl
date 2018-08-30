@@ -152,7 +152,13 @@ void NewWidget::initNetworkTask()
     connect(this, &NewWidget::sendMessage, worker, &NetworkTaskWorker::onSendMessage);
     connect(worker, &NetworkTaskWorker::connected, this, &NewWidget::onConnected);
     connect(worker, &NetworkTaskWorker::sendFinished, this, &NewWidget::onSendFinished);
+#ifndef ZMQ_DLL
     connect(this,SIGNAL(sig_setpath(QString)),worker,SLOT(setFilePath(QString)));
+    connect(this,SIGNAL(sig_phaseLock(double,double)),worker,SLOT(onPhaseLock(double,double)));
+    connect(this,SIGNAL(sig_setParam(double,double,int,int,int,int)),worker,SLOT(onSetParam(double,double,int,int,int,int)));
+    connect(this,SIGNAL(sig_startScan(float,float,float,int,const char**,float,float,float,int)),
+                    worker,SLOT(onStartScan(float,float,float,int,const char**,float,float,float,int)));
+#endif
     mWorkerThread.start();
 }
 
@@ -366,11 +372,10 @@ void NewWidget::initComboBox()
 
 void NewWidget::loadData(QString datapath)
 {
-    loadConversion(datapath+"\\down_conversion.txt", mDownConversionVec);
-    loadConversion(datapath+"\\search_down_conversion.txt", mSearchDownConversionVec);
-    loadUPConversion(datapath+"\\up_conversion.txt", mUpConversionVec);
+    loadConversion(datapath+"/down_conversion.txt", mDownConversionVec);
+    loadConversion(datapath+"/search_down_conversion.txt", mSearchDownConversionVec);
+    loadUPConversion(datapath+"/up_conversion.txt", mUpConversionVec);
     emit sig_setpath(datapath);
-//    loadConversionAndUpConversion(&down,&search,&up);
 }
 
 void NewWidget::on_m_pDSpinBoxInputFreq_valueChanged(double arg1)
@@ -442,7 +447,7 @@ void NewWidget::on_m_pBtnConnWifi_clicked()
 
 void NewWidget::on_m_pBtnPhaseLock_clicked()
 {
-//    this->on_m_pBtnSendMsg_clicked();
+    this->on_m_pBtnSendMsg_clicked();
     requireVec.append(eLockPhase);
     ui->m_pBtnPhaseLock->setText(tr("\346\215\225\350\216\267\344\270\255..."));
     ui->m_pBtnPhaseLock->setEnabled(false);
@@ -464,8 +469,13 @@ void NewWidget::on_m_pBtnPhaseLock_clicked()
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
 
+
+#ifdef ZMQ_DLL
     emit sendMessage(bytes);
-//    this->on_m_pBtnSendMsg_clicked();
+#else
+    emit sig_phaseLock(ui->m_pDSpinBoxDDS1Freq->value(),ui->m_pDSpinBoxOutputPower->value());
+#endif
+    this->on_m_pBtnSendMsg_clicked();
 }
 
 void NewWidget::on_m_pBtnSendMsg_clicked()
@@ -495,7 +505,14 @@ void NewWidget::on_m_pBtnSendMsg_clicked()
     QJsonDocument document;
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
+#ifdef ZMQ_DLL
     emit sendMessage(bytes);
+#else
+    emit sig_setParam(ui->m_pDSpinBoxDDS1Freq->value(),ui->m_pDSpinBoxDDS2Freq->value(),
+                                    ui->m_pSpinBoxDDS2Phase->value(),ui->m_pSpinBoxInputPower->value(),
+                                ui->m_pDSpinBoxOutputPower->value(),1);
+#endif
+
 }
 
 void NewWidget::on_m_pDSpinBoxDDS2Freq_valueChanged(double arg1)
@@ -505,7 +522,7 @@ void NewWidget::on_m_pDSpinBoxDDS2Freq_valueChanged(double arg1)
 
 void NewWidget::on_m_pComBoxDataList_currentTextChanged(const QString &arg1)
 {
-    loadData(QApplication::applicationDirPath()+"\\data\\"+ui->m_pComBoxDataList->currentText());
+    loadData(QApplication::applicationDirPath()+"/data/"+ui->m_pComBoxDataList->currentText());
 }
 
 void NewWidget::on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1)
@@ -543,6 +560,22 @@ void NewWidget::on_m_pBtnStartScan_clicked()
     QJsonDocument document;
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
+#ifdef ZMQ_DLL
     emit sendMessage(bytes);
+#else
+    const char *filepath =(const char *)malloc(QFileInfo(file).absoluteFilePath().toLocal8Bit().size()+1);
+    memset((void*)filepath,0,QFileInfo(file).absoluteFilePath().toLocal8Bit().size()+1);
+    memcpy((void*)filepath,QFileInfo(file).absoluteFilePath().toLocal8Bit().data(),QFileInfo(file).absoluteFilePath().toLocal8Bit().size()+1);
+    emit sig_startScan(ui->m_pDSBStartFrenq->value(),
+                                ui->m_pDSBBujinFrenq->value(),
+                                ui->m_pDSBEndFrenq->value(),
+                                ui->m_pCBScanFreq->isChecked(),
+                                &filepath
+                                ,ui->m_pDSBStartPower->value(),
+                                    ui->m_pDSBBujinpower->value(),
+                                    ui->m_pDSBEndPower->value(),
+                                    ui->m_pCBScanpower->isChecked());
+
+#endif
 
 }
