@@ -2,10 +2,6 @@
 #include <windows.h>
 #include <iostream>
 #include "../../../dll/ratio_dll.h"
-//#ifdef __cplusplus
-//extern "C"
-//{
-//#endif
 
 typedef void*  (__stdcall *DLLCdeclInit)();
 typedef int  (__stdcall *DLLCdeclConn)(const char ** );
@@ -15,9 +11,7 @@ typedef int  (__stdcall *DLLCdeclPhaseLockMsg)(double ,double );
 typedef int  (__stdcall *DLLCdeclSetParam)(double ,double ,int ,int ,int ,int);
 typedef int  (__stdcall *DLLCdecladd)(int ,int );
 
-//#ifdef __cplusplus
-//}
-//#endif
+
 static int panelHandle;
 
 int main(int argc, char *argv[])
@@ -30,7 +24,7 @@ int main(int argc, char *argv[])
     //    DLLCdeclFunction DLLFunction;
 
 //    hinstLib = LoadLibraryEx(L"E:\\UnizWorkspace\\QTworkspace\\radio_ctrl_new\\radio_ctrl\\dll\\debug\\ratio_dll.dll",NULL,LOAD_WITH_ALTERED_SEARCH_PATH);
-    hinstLib = LoadLibraryEx(L"D:\\Opensource workspace\\radio_ctrl\\dll\\debug\\ratio_dll.dll",NULL,LOAD_WITH_ALTERED_SEARCH_PATH);
+    hinstLib = LoadLibraryEx(L"D:\\Opensource workspace\\radio_ctrl\\dll\\release\\ratio_dll.dll",NULL,LOAD_WITH_ALTERED_SEARCH_PATH);
 
     DWORD dw = GetLastError();
     if (hinstLib != NULL)//成功装载动态链接库ratio_dll.dll

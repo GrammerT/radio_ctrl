@@ -105,12 +105,17 @@ int sendMsg(char *data, int data_size)
 //        QByteArray m_jarray(json, data_size);
 //        qDebug()<<"-----server---"<<m_jarray;
 //        recordMsg(m_jarray.toStdString());
+        recordMsg("before zmq_msg_send");
         zmq_msg_send(&message, request, 0);
+        recordMsg("after zmq_msg_send");
         zmq_msg_recv(&msg_rep, request, 0);
+        recordMsg("after zmq_msg_recv");
         free(data);
+        recordMsg("after free true");
         return true;
     }
     free(data);
+    recordMsg("after free false");
     return false;
 }
 
@@ -341,6 +346,7 @@ int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
 int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
 {
     recordMsg("sendSetParamMsg:");
+
     long long mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
     long long mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
     int mPhase = (DDS2Phase*16384)/2/3.1415;
@@ -384,7 +390,9 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, 
     std::strstream ss3;
     ss3 <<  mPhase;
     ss3 >> result3;
+    recordMsg("before malloc");
     char *buf = (char*)malloc(1024);
+    recordMsg("after malloc");
     memset(buf,0,1024);
     int ret = sprintf(buf, str,
             b_400.c_str(),
