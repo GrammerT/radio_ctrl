@@ -2,8 +2,9 @@
 #define NETWORKTASKWORKER_H
 
 #include <QObject>
-//#include "zmq.h"
 #include "ratio_dll.h"
+#include "zmq.h"
+#include <string>
 
 
 class NetworkTaskWorker : public QObject
@@ -34,6 +35,9 @@ public slots:
                      float freq_stop,int freq_enable,
                      const char** mpower_tabel_file_path, float power_start, float power_step,
                      float power_stop, int up_power_enable);
+    void readFilePath(const char **file);
+
+    void recordMsg(std::string str);
 signals:
     void connected();
     void sendFinished();

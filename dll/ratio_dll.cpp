@@ -274,12 +274,12 @@ int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
     return sendMsg(buf,ret );
 }
 
-int  __stdcall loadConversionAndUpConversion( char** mdownconversionpath,
-                                                                              char** msearchconversionpath,
-                                                                              char** mupconversionpath)
+int  __stdcall loadConversionAndUpConversion( const char** mdownconversionpath,
+                                                                             const char** msearchconversionpath,
+                                                                             const char** mupconversionpath)
 {
     recordMsg("loadConversionAndUpConversion:");
-    char * downconversionpath = *mdownconversionpath;
+    const char * downconversionpath = *mdownconversionpath;
     string m1 = downconversionpath;
     string searchconversionpath = *msearchconversionpath;
     string upconversionpath = *mupconversionpath;
