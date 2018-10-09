@@ -468,7 +468,7 @@ void NewWidget::on_m_pBtnPhaseLock_clicked()
 
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
-
+    qDebug()<<"lock:"<<bytes;
 
 #ifdef ZMQ_DLL
     emit sendMessage(bytes);
@@ -505,12 +505,13 @@ void NewWidget::on_m_pBtnSendMsg_clicked()
     QJsonDocument document;
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
+    qDebug()<<"set:"<<bytes;
 #ifdef ZMQ_DLL
     emit sendMessage(bytes);
 #else
     emit sig_setParam(ui->m_pDSpinBoxDDS1Freq->value(),ui->m_pDSpinBoxDDS2Freq->value(),
                                     ui->m_pSpinBoxDDS2Phase->value(),ui->m_pSpinBoxInputPower->value(),
-                                ui->m_pDSpinBoxOutputPower->value(),1);
+                                ui->m_pDSpinBoxOutputPower->value(),0);
 #endif
 
 }
@@ -560,6 +561,7 @@ void NewWidget::on_m_pBtnStartScan_clicked()
     QJsonDocument document;
     document.setObject(sendObject);
     QByteArray bytes = document.toJson();
+    qDebug()<<"on_m_pBtnStartScan_clicked:"<<bytes;
 #ifdef ZMQ_DLL
     emit sendMessage(bytes);
 #else

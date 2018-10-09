@@ -53,19 +53,13 @@ void NetworkTaskWorker::onSendMessage(QByteArray bytes)
 {
     zmq_msg_t message;
     zmq_msg_t msg_rep;
-    zmq_msg_init_size (&msg_rep, 100);
+    zmq_msg_init_size (&msg_rep, bytes.size());
     if(conn_flag == 1)
     {
         qDebug()<<"onsend message";
         zmq_msg_init_size (&message, bytes.length());
         memcpy(zmq_msg_data(&message), bytes.data(), bytes.length());
-        char json[102400];
-        memset(json,0,102400);
-        if (bytes.length()<102400)
-            memcpy(json, zmq_msg_data(&message), bytes.length());
-        QByteArray m_jarray(json, bytes.length());
-        qDebug()<<"--------server-----------"<<m_jarray;
-        recordMsg(QString::fromLocal8Bit(m_jarray).toStdString());
+//        recordMsg(QString::fromLocal8Bit(m_jarray).toStdString());
         zmq_msg_send(&message, request, 0);
         zmq_msg_recv(&msg_rep, request, 0);
         emit sendFinished();

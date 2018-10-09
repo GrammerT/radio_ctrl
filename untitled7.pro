@@ -12,12 +12,16 @@ TARGET = untitled7
 TEMPLATE = app
 RC_FILE = icon.rc
 
-DEFINES += ZMQ_DLL
+#DEFINES += ZMQ_DLL
 
 INCLUDEPATH += "$$PWD/zmq_include"
 
+
+
 CONFIG(debug, debug|release){
     contains(QMAKE_TARGET.arch, x86){
+QMAKE_CFLAGS_DEBUG += -MDd
+QMAKE_CXXFLAGS_DEBUG += -MDd
         LIBS += $$PWD/libs/debug/x86/ratio_dll.lib
         LIBS += $$PWD/libs/debug/x86/libzmq.lib
         message("debug x86")
@@ -25,6 +29,8 @@ CONFIG(debug, debug|release){
 }
 
 CONFIG(release, debug|release){
+QMAKE_CFLAGS_RELEASE += -MD
+QMAKE_CXXFLAGS_RELEASE += -MD
     contains(QMAKE_TARGET.arch, x86){
         LIBS += $$PWD/libs/release/x86/ratio_dll.lib
         LIBS += $$PWD/libs/release/x86/libzmq.lib

@@ -5,6 +5,7 @@
 #include "zmq.h"
 #include <vector>
 #include <strstream>
+#include <Windows.h>
 //#include <QByteArray>
 //#include <QDebug>
 
@@ -30,6 +31,7 @@ static vector<Conversion> mDownConversionVec;
 static vector<Conversion> mSearchDownConversionVec;
 static vector<UPConversion> mUpConversionVec;
 static string filename = "msg.txt";
+//static char data[10240];
 
 void recordMsg(string str)
 {
@@ -53,7 +55,9 @@ void  __stdcall destroyRatioCtrl(void *)
 {
     if(m_pContext!=NULL)
     {
-        zmq_ctx_destroy(m_pContext);
+        recordMsg("destroy before");
+        zmq_ctx_shutdown(m_pContext);
+        recordMsg("destroy after");
     }
 }
 
@@ -83,6 +87,11 @@ int  __stdcall connectTo(const char **mip)
     return true;
 }
 
+void myFree(void *data, void *hint)
+{
+    free(data);
+}
+
 int sendMsg(char *data, int data_size)
 {
     recordMsg(data);
@@ -93,28 +102,25 @@ int sendMsg(char *data, int data_size)
     recordMsg(result3);
     zmq_msg_t message;
     zmq_msg_t msg_rep;
-    zmq_msg_init_size (&msg_rep, 100);
     if(connFlag>0)
     {
-        zmq_msg_init_size (&message, data_size);
+        int ret1 = zmq_msg_init_size (&msg_rep, data_size);
+        ret1 = zmq_msg_init_size (&message, data_size);
         memcpy(zmq_msg_data(&message), data, data_size);
-//        char json[102400];
-//        memset(json,0,102400);
-//        if (data_size<102400)
-//            memcpy(json, zmq_msg_data(&message), data_size);
-//        QByteArray m_jarray(json, data_size);
-//        qDebug()<<"-----server---"<<m_jarray;
-//        recordMsg(m_jarray.toStdString());
+//        zmq_msg_init_data(&message,data,data_size,myFree,NULL);
         recordMsg("before zmq_msg_send");
         zmq_msg_send(&message, request, 0);
         recordMsg("after zmq_msg_send");
         zmq_msg_recv(&msg_rep, request, 0);
         recordMsg("after zmq_msg_recv");
+//        HeapFree(GetProcessHeap(),0,(void*)data);
         free(data);
         recordMsg("after free true");
+        ret1 = zmq_msg_close(&msg_rep);
+        ret1 = zmq_msg_close(&message);
         return true;
     }
-    free(data);
+//    free(data);
     recordMsg("after free false");
     return false;
 }
@@ -182,6 +188,7 @@ int  __stdcall sendPhaseLockMsg(double dds1Freq, double OutputPwd)
                         "\"type\":\"search\","
                         "\"en\":0}";
     char *buf = (char*)malloc(1024);
+//    char *buf = (char*)HeapAlloc(GetProcessHeap(),0,1024);
     memset(buf,0,1024);
     int ret = sprintf(buf, str, result3.c_str(), mSearchDownConversionVec[index].RF, mSearchDownConversionVec[index].LF);
     recordMsg(buf);
@@ -259,13 +266,14 @@ int  __stdcall sendStartScanMsg(float freq_start,float freq_step,
     char str[] = "{\"freq_start\":\"%s\","
                         "\"freq_step\":\"%s\","
                         "\"freq_stop\":\"%s\","
-                        "\"freq_eable\":\"%s\","
+                        "\"freq_enable\":\"%s\","
                         "\"power_table\":\"%s\","
                         "\"power_start\":\"%s\","
                         "\"power_step\":\"%s\","
                         "\"power_stop\":\"%s\","
                         "\"up_power_enable\":\"%s\"}";
     char *buf = (char*)malloc(10240);
+//    char *buf = (char*)HeapAlloc(GetProcessHeap(),0,10240);
     memset(buf,0,10240);
     int ret =sprintf(buf, str, freq_start_s.c_str(), freq_step_s.c_str(), freq_stop_s.c_str(),freq_enable_s.c_str(),str1.c_str(),
                     power_start_s.c_str(),power_step_s.c_str(),power_stop_s.c_str(),up_power_enable_s.c_str());
@@ -392,6 +400,7 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, 
     ss3 >> result3;
     recordMsg("before malloc");
     char *buf = (char*)malloc(1024);
+//    char *buf = (char*)HeapAlloc(GetProcessHeap(),0,1024);
     recordMsg("after malloc");
     memset(buf,0,1024);
     int ret = sprintf(buf, str,
