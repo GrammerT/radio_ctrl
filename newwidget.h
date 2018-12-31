@@ -44,12 +44,13 @@ signals:
     void sendMessage(QByteArray bytes);
     void sendScanMessage(QByteArray bytes);
     void sig_setpath(QString);
-    void sig_setParam(double /*DDS1Freq*/, double /*DDS2Freq*/, int /*DDS2Phase*/, int /*inputPower*/, int /*outputPower*/, int /*is_400*/);
+    void sig_setParam(double /*DDS1Freq*/, double /*DDS2Freq*/, int /*DDS2Phase*/, double /*inputPower*/, double /*outputPower*/, int /*is_400*/);
     void sig_phaseLock(double /*dds1Freq*/, double /*OutputPwd*/);
     void sig_startScan(float /*freq_start*/,float /*freq_step*/,
                        float /*freq_stop*/,int /*freq_enable*/,
                        const char** /*mpower_tabel_file_path*/, float /*power_start*/, float /*power_step*/,
                        float /*power_stop*/, int /*up_power_enable*/);
+    void sig_JumpFreq(double /*DDS1Freq*/, double /*DDS2Freq*/);
 
 protected:
     virtual void paintEvent(QPaintEvent *event)override;
@@ -74,6 +75,8 @@ private slots:
     void on_m_pDSpinBoxDDS1Freq_valueChanged(double arg1);
 
     void on_m_pBtnStartScan_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     void initWidget();

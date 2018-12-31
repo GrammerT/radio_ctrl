@@ -351,12 +351,13 @@ int  __stdcall loadConversionAndUpConversion( const char** mdownconversionpath,
 }
 
 
-int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
+int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase,
+                               double inputPower, double outputPower, int is_400)
 {
     recordMsg("sendSetParamMsg:");
 
-    long long mDDS1word = (DDS1Freq/400000000.0)*(((long long)1) << 48);
-    long long mDDS2word = (DDS2Freq/ 300000000.0)* (((long long)1) << 48);
+    long long mDDS1word = (DDS1Freq/100000000.0)*(((long long)1) << 48);
+    long long mDDS2word = (DDS2Freq/ 100000000.0)* (((long long)1) << 48);
     int mPhase = (DDS2Phase*16384)/2/3.1415;
     int inputIndex = findAttenuation(inputPower, mDownConversionVec);
     int outputIndex = findUPAttenuation(outputPower, mUpConversionVec);
@@ -415,6 +416,66 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase, 
             mUpConversionVec[outputIndex].LF_TWO,
             result3.c_str()
             );
+    recordMsg(buf);
+    return sendMsg(buf,ret);
+}
+
+int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
+                                      double dds_f1,
+                                      int dds_t0,
+                                      int dds_t1,
+                                      int enable)
+{
+    recordMsg("sendSetJumpFreqParamMsg");
+
+    long long mDDS1word = (dds_f0/100000000.0)*(((long long)1) << 48);
+    long long mDDS2word = (dds_f1/100000000.0)* (((long long)1) << 48);
+
+
+    char str[] = "{ \"dds_f0\":\"%s\","
+                 "\"dds_f1\":\"%s\","
+                 "\"dds_t0\":\"%s\","
+                 "\"dds_t1\":\"%s\","
+                 "\"hop_enable\":\"%s\"}";
+
+    std::string result1;
+    std::strstream ss1;
+
+    std::string result2;
+    std::strstream ss2;
+
+    ss1 <<  mDDS1word;
+    ss1 >> result1;
+    ss2 <<  mDDS2word;
+    ss2 >> result2;
+
+    std::string result3;
+    std::strstream ss3;
+    ss3 <<  dds_t0;
+    ss3 >> result3;
+
+    std::string result4;
+    std::strstream ss4;
+    ss4 <<  dds_t1;
+    ss4 >> result4;
+
+    std::string result5;
+    std::strstream ss5;
+    ss5 <<  enable;
+    ss5 >> result5;
+
+
+
+    recordMsg("before malloc");
+    char *buf = (char*)malloc(1024);
+    recordMsg("after malloc");
+    memset(buf,0,1024);
+    int ret = sprintf(buf, str,
+            result1.c_str(),result2.c_str(),
+                      result3.c_str(),
+                      result4.c_str(),
+                      result5.c_str());
+    recordMsg("after sprintf...");
     recordMsg(buf);
     return sendMsg(buf,ret);
 }

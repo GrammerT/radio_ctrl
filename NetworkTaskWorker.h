@@ -27,9 +27,10 @@ public slots:
     void onSetParam(double DDS1Freq,
                     double DDS2Freq,
                     int DDS2Phase,
-                    int inputPower,
-                    int outputPower,
+                    double inputPower,
+                    double outputPower,
                     int is_400);
+    void onJumpFreq(double DDS1Freq, double DDS2Freq);
     void onPhaseLock(double dds1Freq,double OutputPwd);
     void onStartScan(float freq_start,float freq_step,
                      float freq_stop,int freq_enable,

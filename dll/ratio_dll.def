@@ -8,3 +8,4 @@ sendStartScanMsg
 sendPhaseLockMsg
 sendSetParamMsg
 destroyRatioCtrl
+sendSetJumpFreqParamMsg

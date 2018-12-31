@@ -108,9 +108,19 @@ void NetworkTaskWorker::setFilePath(QString datapath)
 
 }
 
-void NetworkTaskWorker::onSetParam(double DDS1Freq, double DDS2Freq, int DDS2Phase, int inputPower, int outputPower, int is_400)
+void NetworkTaskWorker::onSetParam(double DDS1Freq, double DDS2Freq, int DDS2Phase, double inputPower, double outputPower, int is_400)
 {
     sendSetParamMsg(DDS1Freq,DDS2Freq,DDS2Phase,inputPower,outputPower,is_400);
+    emit sendFinished();
+}
+
+void NetworkTaskWorker::onJumpFreq(double DDS1Freq, double DDS2Freq)
+{
+    long long mDDS1word = (DDS1Freq/100000000.0)*(((long long)1) << 48);
+    long long mDDS2word = (DDS2Freq/ 100000000.0)* (((long long)1) << 48);
+    qDebug()<<mDDS1word<<" -- "<<mDDS2word;
+
+    sendSetJumpFreqParamMsg(DDS1Freq,DDS2Freq,1000000,8000000,1);
     emit sendFinished();
 }
 

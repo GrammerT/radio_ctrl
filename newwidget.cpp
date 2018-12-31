@@ -155,9 +155,10 @@ void NewWidget::initNetworkTask()
 #ifndef ZMQ_DLL
     connect(this,SIGNAL(sig_setpath(QString)),worker,SLOT(setFilePath(QString)));
     connect(this,SIGNAL(sig_phaseLock(double,double)),worker,SLOT(onPhaseLock(double,double)));
-    connect(this,SIGNAL(sig_setParam(double,double,int,int,int,int)),worker,SLOT(onSetParam(double,double,int,int,int,int)));
+    connect(this,SIGNAL(sig_setParam(double,double,int,double,double,int)),worker,SLOT(onSetParam(double,double,int,double,double,int)));
     connect(this,SIGNAL(sig_startScan(float,float,float,int,const char**,float,float,float,int)),
                     worker,SLOT(onStartScan(float,float,float,int,const char**,float,float,float,int)));
+    connect(this,SIGNAL(sig_JumpFreq(double,double)),worker,SLOT(onJumpFreq(double,double)));
 #endif
     mWorkerThread.start();
 }
@@ -541,7 +542,7 @@ void NewWidget::on_m_pBtnStartScan_clicked()
     sendObject.insert("freq_stop", QString::number(ui->m_pDSBEndFrenq->value()));
     sendObject.insert("freq_enable", QString::number(ui->m_pCBScanFreq->isChecked()));
 
-    QFile file(QApplication::applicationDirPath()+"\\data\\"+ui->m_pComBoxDataList->currentText()+"\\up_conversion.txt");//路径需要修改成实际使用路径
+    QFile file(QApplication::applicationDirPath()+"\\data\\"+ui->m_pComBoxDataList->currentText()+"\\up_conversion.txt");//路锟斤拷锟斤拷要锟睫改筹拷实锟斤拷使锟斤拷路锟斤拷
     if(!file.open(QIODevice::ReadOnly))
     {
         QMessageBox::warning(this,tr("\351\224\231\350\257\257"),tr("\346\211\223\345\274\200%1\345\244\261\350\264\245"));
@@ -552,10 +553,10 @@ void NewWidget::on_m_pBtnStartScan_clicked()
     file.close();
 
     sendObject.insert("power_table", m_data);
-    sendObject.insert("power_start",QString::number(ui->m_pDSBStartPower->value()));//功率实际为-dBm
-    sendObject.insert("power_step",QString::number(ui->m_pDSBBujinpower->value()));//功率实际为-dBm
+    sendObject.insert("power_start",QString::number(ui->m_pDSBStartPower->value()));//锟斤拷锟斤拷实锟斤拷为-dBm
+    sendObject.insert("power_step",QString::number(ui->m_pDSBBujinpower->value()));//锟斤拷锟斤拷实锟斤拷为-dBm
 
-    sendObject.insert("power_stop",QString::number(ui->m_pDSBEndPower->value()));//功率实际为-dBm
+    sendObject.insert("power_stop",QString::number(ui->m_pDSBEndPower->value()));//锟斤拷锟斤拷实锟斤拷为-dBm
     sendObject.insert("up_power_enable", QString::number(ui->m_pCBScanpower->isChecked()));
 
     QJsonDocument document;
@@ -580,4 +581,9 @@ void NewWidget::on_m_pBtnStartScan_clicked()
 
 #endif
 
+}
+
+void NewWidget::on_pushButton_clicked()
+{
+    emit sig_JumpFreq(ui->m_pDSpinBoxDDS1Freq->value(),ui->m_pDSpinBoxDDS2Freq->value());
 }

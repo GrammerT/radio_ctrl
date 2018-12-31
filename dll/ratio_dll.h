@@ -41,11 +41,17 @@ RATIO_DLL_LIBRARY int __stdcall sendPhaseLockMsg(double dds1Freq,double OutputPw
 // * 发送设置参数指令
 // */
 RATIO_DLL_LIBRARY int __stdcall sendSetParamMsg(double DDS1Freq,
-                                                                             double DDS2Freq,
-                                                                             int DDS2Phase,
-                                                                             int inputPower,
-                                                                             int outputPower,
-                                                                             int is_400);
+                                             double DDS2Freq,
+                                             int DDS2Phase,
+                                             double inputPower,
+                                             double outputPower,
+                                             int is_400);
+//! 跳频function
+RATIO_DLL_LIBRARY int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
+                                                     double dds_f1,
+                                                     int dds_t0,
+                                                     int dds_t1,
+                                                     int enable);
 ///**
 // *最后调用此函数释放资源
 // */
