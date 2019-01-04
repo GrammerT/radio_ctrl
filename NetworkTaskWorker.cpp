@@ -114,13 +114,18 @@ void NetworkTaskWorker::onSetParam(double DDS1Freq, double DDS2Freq, int DDS2Pha
     emit sendFinished();
 }
 
-void NetworkTaskWorker::onJumpFreq(double DDS1Freq, double DDS2Freq)
+void NetworkTaskWorker::onJumpFreq(double DDS1Freq, double DDS2Freq,double t0,double t1)
 {
     long long mDDS1word = (DDS1Freq/100000000.0)*(((long long)1) << 48);
     long long mDDS2word = (DDS2Freq/ 100000000.0)* (((long long)1) << 48);
     qDebug()<<mDDS1word<<" -- "<<mDDS2word;
+    long a = t0;
+    long b = t1;
 
-    sendSetJumpFreqParamMsg(DDS1Freq,DDS2Freq,1000000,8000000,1);
+    qDebug()<<t0<<" -- "<<t1;
+    qDebug()<<a<<" -- "<<b;
+
+    sendSetJumpFreqParamMsg(DDS1Freq,DDS2Freq,t0,t1,1);
     emit sendFinished();
 }
 

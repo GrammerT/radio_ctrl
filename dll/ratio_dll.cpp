@@ -120,7 +120,7 @@ int sendMsg(char *data, int data_size)
         ret1 = zmq_msg_close(&message);
         return true;
     }
-//    free(data);
+
     recordMsg("after free false");
     return false;
 }
@@ -422,8 +422,8 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase,
 
 int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
                                       double dds_f1,
-                                      int dds_t0,
-                                      int dds_t1,
+                                      double dds_t0,
+                                      double dds_t1,
                                       int enable)
 {
     recordMsg("sendSetJumpFreqParamMsg");
@@ -463,8 +463,6 @@ int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
     std::strstream ss5;
     ss5 <<  enable;
     ss5 >> result5;
-
-
 
     recordMsg("before malloc");
     char *buf = (char*)malloc(1024);

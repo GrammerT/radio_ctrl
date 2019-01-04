@@ -30,7 +30,7 @@ public slots:
                     double inputPower,
                     double outputPower,
                     int is_400);
-    void onJumpFreq(double DDS1Freq, double DDS2Freq);
+    void onJumpFreq(double DDS1Freq, double DDS2Freq, double t0, double t1);
     void onPhaseLock(double dds1Freq,double OutputPwd);
     void onStartScan(float freq_start,float freq_step,
                      float freq_stop,int freq_enable,
