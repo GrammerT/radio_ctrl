@@ -6,6 +6,7 @@
 #include <vector>
 #include <strstream>
 #include <Windows.h>
+#include <stdlib.h>
 //#include <QByteArray>
 //#include <QDebug>
 
@@ -422,8 +423,8 @@ int  __stdcall sendSetParamMsg(double DDS1Freq, double DDS2Freq, int DDS2Phase,
 
 int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
                                       double dds_f1,
-                                      double dds_t0,
-                                      double dds_t1,
+                                      unsigned int  dds_t0,
+                                      unsigned int  dds_t1,
                                       int enable)
 {
     recordMsg("sendSetJumpFreqParamMsg");
@@ -437,6 +438,7 @@ int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
                  "\"dds_t0\":\"%s\","
                  "\"dds_t1\":\"%s\","
                  "\"hop_enable\":\"%s\"}";
+
 
     std::string result1;
     std::strstream ss1;

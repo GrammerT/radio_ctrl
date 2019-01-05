@@ -158,7 +158,7 @@ void NewWidget::initNetworkTask()
     connect(this,SIGNAL(sig_setParam(double,double,int,double,double,int)),worker,SLOT(onSetParam(double,double,int,double,double,int)));
     connect(this,SIGNAL(sig_startScan(float,float,float,int,const char**,float,float,float,int)),
                     worker,SLOT(onStartScan(float,float,float,int,const char**,float,float,float,int)));
-    connect(this,SIGNAL(sig_JumpFreq(double,double,double /*t0*/,double)),worker,SLOT(onJumpFreq(double,double,double /*t0*/,double)));
+    connect(this,SIGNAL(sig_JumpFreq(double,double,quint32 /*t0*/,quint32)),worker,SLOT(onJumpFreq(double,double,quint32 /*t0*/,quint32)));
 #endif
     mWorkerThread.start();
 }
@@ -585,8 +585,9 @@ void NewWidget::on_m_pBtnStartScan_clicked()
 
 void NewWidget::on_pushButton_clicked()
 {
+    requireVec.append(eMsgSend);
     emit sig_JumpFreq(ui->m_pDSpinBoxDDS1Freq->value(),
                                     ui->m_pDSpinBoxDDS2Freq->value(),
-                                    ui->m_pDoubleSpinBoxT0->value()*1e9,
-                                    ui->m_pDoubleSpinBoxT1->value()*1e9);
+                                    ui->m_pDoubleSpinBoxT0->value()*100000000,
+                                    ui->m_pDoubleSpinBoxT1->value()*100000000);
 }

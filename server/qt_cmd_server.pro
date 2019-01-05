@@ -9,7 +9,7 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += "$$PWD/../radio_ctrl/zmq_include"
+INCLUDEPATH += "$$PWD/../zmq_include"
 
 
 SOURCES += main.cpp \
@@ -19,6 +19,6 @@ HEADERS += \
     zmq_thread.h \
 
 
-LIBS += $$PWD/../radio_ctrl/libs/release/x86/libzmq.lib
+LIBS += $$PWD/../libs/release/x86/libzmq.lib
 
 

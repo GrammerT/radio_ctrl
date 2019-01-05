@@ -50,7 +50,7 @@ signals:
                        float /*freq_stop*/,int /*freq_enable*/,
                        const char** /*mpower_tabel_file_path*/, float /*power_start*/, float /*power_step*/,
                        float /*power_stop*/, int /*up_power_enable*/);
-    void sig_JumpFreq(double /*DDS1Freq*/, double /*DDS2Freq*/,double /*t0*/,double);
+    void sig_JumpFreq(double /*DDS1Freq*/, double /*DDS2Freq*/,quint32 /*t0*/,quint32);
 
 protected:
     virtual void paintEvent(QPaintEvent *event)override;

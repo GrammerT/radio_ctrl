@@ -73,7 +73,26 @@ void zmq_thread::run()
 
 void zmq_thread::processCmd(QByteArray m_cmd)
 {
+    QJsonParseError json_error;
+    QJsonDocument prase_document = QJsonDocument::fromJson(m_cmd, &json_error);
 
+    if (prase_document.isObject()) {
+        QJsonObject paramas = prase_document.object();
+        if (paramas.contains("dds_t0")) {
+            QString dds2_control = paramas.take("dds_t0").toString();
+//            quint32 dds_t0 = dds2_control.toInt();
+            quint32 dds_t0 = dds2_control.toDouble();
+
+            unsigned char* p = (unsigned char*)&dds_t0;
+            qDebug()<<"dds_t0"<<dds_t0;
+        }
+        if (paramas.contains("dds_t1")) {
+            QString dds2_control = paramas.take("dds_t1").toString();
+            quint32 dds_t1 = dds2_control.toInt();
+            unsigned char* p = (unsigned char*)&dds_t1;
+            qDebug()<<"dds_t1"<<dds_t1;
+        }
+    }
 }
 
 void zmq_thread::trigged()

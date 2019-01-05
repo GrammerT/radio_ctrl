@@ -49,8 +49,8 @@ RATIO_DLL_LIBRARY int __stdcall sendSetParamMsg(double DDS1Freq,
 //! 跳频function
 RATIO_DLL_LIBRARY int __stdcall sendSetJumpFreqParamMsg(double dds_f0,
                                                      double dds_f1,
-                                                     double dds_t0,
-                                                     double dds_t1,
+                                                     unsigned int  dds_t0,
+                                                     unsigned int  dds_t1,
                                                      int enable);
 ///**
 // *最后调用此函数释放资源
